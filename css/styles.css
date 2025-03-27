@@ -188,4 +188,30 @@ body {
   button:hover {
     background-color: #333;
   }
+.coach-card {
+    margin: 20px;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.coach-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.coach-card h3 {
+    margin-top: 10px;
+    color: #444;
+}
+
+.coach-card p {
+    margin-top: 5px;
+    color: #666;
+}
   
