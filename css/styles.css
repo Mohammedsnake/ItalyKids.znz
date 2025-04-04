@@ -25,13 +25,13 @@ header nav a {
   color: #1004fa;
   margin: 0 15px;
   text-decoration: none;
-  transition: color 0.3s ease-in-out; /* Smooth transition */
+  transition: color 0.3s ease-in-out;
 }
 
 header nav a:hover,
 header nav a:focus {
   color: #148309; /* Hover & focus effect */
-  outline: 2px solid #148309; /* Focus accessibility */
+  outline: 2px solid #148309; /* Accessibility focus indicator */
   outline-offset: 2px;
 }
 
@@ -85,37 +85,37 @@ section .coach-card {
   color: #ffffff; /* White text for readability */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Card shadow */
   text-align: center;
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Smooth hover effect */
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
 }
 
 section .coach-card img {
-  width: 100px; /* Fixed size for coach image */
+  width: 100px;
   height: 100px;
-  border-radius: 50%; /* Circular image */
-  border: 3px solid #ffffff; /* Border around image */
+  border-radius: 50%;
+  border: 3px solid #ffffff;
   margin-bottom: 15px;
 }
 
 section .coach-card h3 {
-  font-size: 1.5em; /* Larger heading */
+  font-size: 1.5em;
   margin: 10px 0;
 }
 
 section .coach-card p {
-  font-size: 1em; /* Standard text size */
-  line-height: 1.8; /* Improve text readability */
+  font-size: 1em;
+  line-height: 1.8;
   margin-bottom: 15px;
 }
 
 section .coach-card ul {
-  list-style-type: square; /* Square bullet points */
+  list-style-type: square;
   padding-left: 1.5em;
-  margin: 0; /* Remove margin */
+  margin: 0;
 }
 
 section .coach-card:hover {
-  transform: scale(1.05); /* Slight zoom effect */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Player list grid styles */
@@ -148,7 +148,7 @@ section .coach-card:hover {
 }
 
 .player-card:hover {
-  transform: scale(1.05); /* Interactive hover effect */
+  transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -275,7 +275,7 @@ button {
 
 button:hover, button:focus {
   background-color: #148309;
-  outline: 2px solid #148309; /* Added focus indicator */
+  outline: 2px solid #148309;
 }
 
 /* GoogleForm */
@@ -283,6 +283,7 @@ iframe {
   width: 100%;
   max-width: 640px;
   height: auto;
+  overflow-y: auto;
 }
 
 /* Media queries for responsiveness */
