@@ -319,6 +319,28 @@ iframe {
   footer {
     font-size: 0.8em;
   }
+    section .coach-card {
+      width: 100%; /* Make the card take up the full width */
+      max-width: 100%; /* Remove width restrictions */
+      padding: 10px; /* Reduce padding for smaller screens */
+      margin: 10px auto; /* Adjust margin to keep the cards centered */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduce shadow intensity */
+    }
+  
+    section .coach-card img {
+      width: 80px; /* Reduce image size */
+      height: 80px;
+      margin-bottom: 10px;
+    }
+  
+    section .coach-card h3 {
+      font-size: 1.2em; /* Adjust font size for headings */
+    }
+  
+    section .coach-card p {
+      font-size: 0.9em; /* Make text slightly smaller */
+      line-height: 1.5; /* Ensure readability with reduced spacing */
+    }
 }
 
 @media (max-width: 320px) {
