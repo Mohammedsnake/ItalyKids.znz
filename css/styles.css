@@ -209,7 +209,7 @@ ul {
 
 #schedule tr:nth-child(even) {
   background-color: #f50464;
-  color: blue;
+  color: white;
 }
 
 #schedule tr:hover {
