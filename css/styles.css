@@ -25,11 +25,14 @@ header nav a {
   color: #1004fa;
   margin: 0 15px;
   text-decoration: none;
-  transition: color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out; /* Smooth transition */
 }
 
-header nav a:hover {
-  color: #148309; /* Hover effect */
+header nav a:hover,
+header nav a:focus {
+  color: #148309; /* Hover & focus effect */
+  outline: 2px solid #148309; /* Focus accessibility */
+  outline-offset: 2px;
 }
 
 /* Main content styles */
@@ -71,7 +74,7 @@ ul {
 }
 
 /* Coach Card Styles */
-.coach-card {
+section .coach-card {
   width: 100%;
   max-width: 400px; /* Adjust card width */
   margin: 1.5em auto; /* Center cards with spacing */
@@ -82,10 +85,10 @@ ul {
   color: #ffffff; /* White text for readability */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Card shadow */
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s; /* Hover effect */
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Smooth hover effect */
 }
 
-.coach-card img {
+section .coach-card img {
   width: 100px; /* Fixed size for coach image */
   height: 100px;
   border-radius: 50%; /* Circular image */
@@ -93,24 +96,24 @@ ul {
   margin-bottom: 15px;
 }
 
-.coach-card h3 {
+section .coach-card h3 {
   font-size: 1.5em; /* Larger heading */
   margin: 10px 0;
 }
 
-.coach-card p {
+section .coach-card p {
   font-size: 1em; /* Standard text size */
   line-height: 1.8; /* Improve text readability */
   margin-bottom: 15px;
 }
 
-.coach-card ul {
+section .coach-card ul {
   list-style-type: square; /* Square bullet points */
   padding-left: 1.5em;
   margin: 0; /* Remove margin */
 }
 
-.coach-card:hover {
+section .coach-card:hover {
   transform: scale(1.05); /* Slight zoom effect */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
 }
@@ -130,6 +133,7 @@ ul {
   text-align: center;
   background: #f50464;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .player-card img {
@@ -141,6 +145,11 @@ ul {
 .player-card h3 {
   margin: 10px 0 5px;
   font-size: 1.2em;
+}
+
+.player-card:hover {
+  transform: scale(1.05); /* Interactive hover effect */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Search bar styles */
@@ -175,7 +184,7 @@ ul {
   border-radius: 8px;
   overflow: hidden;
   color: white;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
 }
 
 .gallery-item img {
@@ -193,6 +202,7 @@ ul {
   width: 100%;
   border-collapse: collapse;
   margin: 1em 0;
+  color: blue;
 }
 
 #schedule th, #schedule td {
@@ -203,13 +213,13 @@ ul {
 
 #schedule th {
   background-color: #1004fa;
-  color: blue;
+  color: red;
   cursor: pointer;
 }
 
 #schedule tr:nth-child(even) {
   background-color: #f50464;
-  color: white;
+  color: blue;
 }
 
 #schedule tr:hover {
@@ -248,6 +258,10 @@ input, textarea {
   font-size: 1em;
 }
 
+input:required, textarea:required {
+  border-left: 4px solid #f50464; /* Highlight required fields */
+}
+
 button {
   padding: 10px 20px;
   background-color: #f50464;
@@ -259,8 +273,9 @@ button {
   transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
+button:hover, button:focus {
   background-color: #148309;
+  outline: 2px solid #148309; /* Added focus indicator */
 }
 
 /* Media queries for responsiveness */
@@ -270,14 +285,9 @@ button:hover {
     align-items: center;
   }
 
-  .player-card {
+  .player-card, .coach-card {
     width: 100%;
     max-width: 300px;
-  }
-
-  .coach-card {
-    width: 100%;
-    max-width: 300px; /* Adjust coach card width */
   }
 }
 
