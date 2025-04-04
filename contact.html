@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us - Italy Kids</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css"> <!-- Link to external styles -->
 </head>
 <body>
   <header>
@@ -16,29 +16,33 @@
       <a href="gallery.html" aria-label="Visit the Gallery">Gallery</a>
       <a href="schedule.html" aria-label="Match Schedule">Schedule</a>
       <a href="coaches.html" aria-label="Meet the Coaches">Coaches</a>
-      <a href="contact.html" aria-label="Get in Touch">Contact</a>
+      <a href="contact.html" aria-label="Get in Touch" class="active">Contact</a>
     </nav>
   </header>
   <main>
     <section id="contact">
       <h2>Get in Touch</h2>
-      <form id="contact-form">
-        <label for="name" aria-label="Enter your name">Name:</label>
-        <input type="text" id="name" name="name" required placeholder="Your Name">
-
-        <label for="email" aria-label="Enter your email address">Email:</label>
-        <input type="email" id="email" name="email" required placeholder="Your Email">
-
-        <label for="message" aria-label="Write your message">Message:</label>
-        <textarea id="message" name="message" rows="5" required placeholder="Your Message"></textarea>
-
-        <button type="submit">Send</button>
-      </form>
+      <p>
+        If you'd like to reach out to us, please fill in the form below. We'll get back to you as soon as possible!
+      </p>
+      <!-- Embed Google Form -->
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLScszrNldKFCfNrjbp2GdW5SHqB-O7Idn1ldBydnzhshuDEIRA/viewform?embedded=true"
+        width="640"
+        height="987"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0">
+        Loading…
+      </iframe>
     </section>
   </main>
   <footer>
     <p>© 2025 Italy Kids. We’d love to hear from you!</p>
+    <p>
+      If the form doesn’t load, you can access it directly
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScszrNldKFCfNrjbp2GdW5SHqB-O7Idn1ldBydnzhshuDEIRA/viewform" target="_blank" aria-label="Google Form">here</a>.
+    </p>
   </footer>
-  <script src="js/script.js"></script>
 </body>
 </html>
