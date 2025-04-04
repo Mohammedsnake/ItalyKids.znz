@@ -8,48 +8,53 @@ body {
 
 /* Header styles */
 header {
-  background: #444;
-  color: #fff;
+  background: #f50464;
+  color: #1004fa;
   padding: 1em 0;
   text-align: center;
 }
 
 header nav a {
-  color: #fff;
+  color: #1004fa;
   margin: 0 10px;
   text-decoration: none;
+}
+
+header img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Main content styles */
 main {
   padding: 2em;
-  background: #f4f4f4;
+  background: #05f3e7;
 }
 
 /* Footer styles */
 footer {
   text-align: center;
   padding: 1em 0;
-  background: #444;
-  color: #fff;
+  background: #f50464;
+  color: #1004fa;
 }
 
 /* Section styles */
 section {
   margin: 2em 0;
   padding: 1em;
-  background: #f9f9f9;
+  background: #000000;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 section h2 {
-  color: #444;
+  color: #ffffff;
   margin-bottom: 0.5em;
 }
 
 section p, ul {
-  color: #666;
+  color: #ffffff;
   font-size: 1.1em;
 }
 
@@ -82,7 +87,7 @@ ul {
   border: 1px solid #ddd;
   border-radius: 8px;
   text-align: center;
-  background: #fff;
+  background: #f50464;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -106,7 +111,7 @@ ul {
 
 #gallery h2 {
   margin-bottom: 1em;
-  color: #444;
+  color: #ffffff;
 }
 
 .gallery-grid {
@@ -140,23 +145,26 @@ ul {
 }
 
 #schedule th, #schedule td {
-  border: 1px solid #ddd;
+  border: 1px solid #1004fa;
   padding: 8px;
   text-align: center;
+  color: blue;
 }
 
 #schedule th {
-  background-color: #444;
+  background-color: #1004fa;
   color: white;
   cursor: pointer;
 }
 
 #schedule tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f50464;
+  color: blue;
 }
 
 #schedule tr:hover {
   background-color: #f1f1f1;
+  color: blue;
 }
 
 /* Contact form styles */
@@ -193,8 +201,8 @@ input, textarea {
 
 button {
   padding: 10px 20px;
-  background-color: #444;
-  color: #fff;
+  background-color: #f50464;
+  color: #1004fa;
   border: none;
   border-radius: 5px;
   font-size: 1em;
@@ -202,7 +210,7 @@ button {
 }
 
 button:hover {
-  background-color: #333;
+  background-color: #148309;
 }
 
 /* Media queries for responsiveness */
