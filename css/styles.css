@@ -18,6 +18,11 @@ header nav a {
   color: #1004fa;
   margin: 0 10px;
   text-decoration: none;
+  transition: color 0.3s ease-in-out; /* Transition effect */
+}
+
+header nav a:hover {
+  color: #148309; /* Hover effect */
 }
 
 header img {
@@ -34,7 +39,7 @@ main {
 /* Footer styles */
 footer {
   text-align: center;
-  padding: 1em 0;
+  padding: 1.5em 0; /* Added padding for better spacing */
   background: #f50464;
   color: #1004fa;
 }
@@ -45,7 +50,7 @@ section {
   padding: 1em;
   background: #000000;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
 }
 
 section h2 {
@@ -124,6 +129,7 @@ ul {
   border: 2px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
+  color: white;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -207,10 +213,11 @@ button {
   border-radius: 5px;
   font-size: 1em;
   cursor: pointer;
+  transition: background-color 0.3s ease-in-out; /* Transition effect for hover */
 }
 
 button:hover {
-  background-color: #148309;
+  background-color: #148309; /* Changed hover color */
 }
 
 /* Media queries for responsiveness */
@@ -245,5 +252,20 @@ button:hover {
 
   footer {
     font-size: 0.8em;
+  }
+}
+
+@media (max-width: 320px) {
+  header {
+    font-size: 0.8em;
+  }
+
+  .player-card {
+    width: 100%;
+    padding: 5px;
+  }
+
+  section {
+    padding: 0.3em;
   }
 }
