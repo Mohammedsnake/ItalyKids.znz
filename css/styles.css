@@ -300,59 +300,49 @@ iframe {
 }
 
 @media (max-width: 480px) {
-  header {
-    font-size: 0.9em;
-  }
-
-  header nav a {
-    margin: 0 5px;
-  }
-
-  main {
-    padding: 1em;
-  }
-
-  footer {
-    font-size: 0.8em;
-  }
-
+  /* Section adjustments */
   section {
-    margin: 2em 0;
-    padding: 1em;
-    background: #000000;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-    max-width: 100%; /* Ensures section doesn't exceed its container */
-    overflow: hidden; /* Ensures content, including coach cards, is clipped if it overflows */
+    padding: 0.5em;
+    margin: 1em 0; /* Adjust section spacing for better layout */
   }
-  
-  section .coach-card {
-    width: 100%; /* Ensures the card takes up the available width of the section */
-    max-width: 100%; /* Ensures it never exceeds the section’s boundaries */
-    margin: 10px auto;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background: #f50464;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
 
-  
-    section .coach-card img {
-      width: 80px; /* Reduce image size */
-      height: 80px;
-      margin-bottom: 10px;
-    }
-  
-    section .coach-card h3 {
-      font-size: 1.2em; /* Adjust font size for headings */
-    }
-  
-    section .coach-card p {
-      font-size: 0.9em; /* Make text slightly smaller */
-      line-height: 1.5; /* Ensure readability with reduced spacing */
-    }
+  /* Coach Card adjustments */
+  section .coach-card {
+    width: calc(100% - 20px); /* Ensure card stays within section boundaries */
+    max-width: 100%; /* No overflow outside the section */
+    margin: 10px auto; /* Center cards on the screen */
+    padding: 15px; /* Slightly reduced padding for compact cards */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 10px; /* Keep rounded corners consistent */
+    background: #f50464; /* Retain theme color */
+  }
+
+  /* Coach Card Image adjustments */
+  section .coach-card img {
+    width: 70px; /* Reduce image size proportionally */
+    height: 70px;
+    margin-bottom: 10px;
+    border-radius: 50%; /* Maintain circular shape */
+    border: 2px solid #ffffff; /* Adjust border thickness for smaller screens */
+  }
+
+  /* Coach Card Text adjustments */
+  section .coach-card h3 {
+    font-size: 1.1em; /* Reduce heading size slightly */
+    margin: 5px 0;
+  }
+
+  section .coach-card p {
+    font-size: 0.9em; /* Adjust paragraph text for readability */
+    line-height: 1.4; /* Compact spacing for smaller cards */
+    margin: 5px 0; /* Remove excess margin */
+  }
+
+  /* Adjust List Style (if any) */
+  section .coach-card ul {
+    font-size: 0.8em; /* Smaller font for bullet points */
+    padding-left: 1em; /* Align lists neatly within the card */
+  }
 }
 
 @media (max-width: 320px) {
