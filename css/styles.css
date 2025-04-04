@@ -278,6 +278,13 @@ button:hover, button:focus {
   outline: 2px solid #148309; /* Added focus indicator */
 }
 
+/* GoogleForm */
+iframe {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
   #players-list {
