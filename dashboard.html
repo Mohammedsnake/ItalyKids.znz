@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italy Kids - Dashboard</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0078D7;
+            --primary-dark: #0068b7;
+            --secondary: #E63946;
+            --light: #F1FAEE;
+            --dark: #1D3557;
+            --success: #4CAF50;
+            --italy-blue: #0066CC;
+            --italy-green: #009966;
+            --italy-red: #E32017;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--italy-blue), var(--dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo-container img {
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--italy-green);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .user-text h2 {
+            margin-bottom: 0.25rem;
+            font-size: 1.2rem;
+        }
+
+        .user-text p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background-color: var(--italy-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c11a12;
+            transform: translateY(-2px);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--italy-green), var(--italy-blue));
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--italy-green);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--light);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .dashboard-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="assets/Logo.png" alt="Italy Kids Team Logo">
+        </div>
+        <h1>Welcome to Italy Kids</h1>
+        <div class="user-info">
+            <div class="user-details">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-text">
+                    <h2 id="userName">Welcome!</h2>
+                    <p id="userEmail"></p>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <span>Logout</span>
+                <i class="fas fa-sign-out-alt" style="margin-left: 5px;"></i>
+            </button>
+        </div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-home"></i> Home</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+            <a href="players.html"><i class="fas fa-users"></i> Players</a>
+            <a href="gallery.html"><i class="fas fa-images"></i> Gallery</a>
+            <a href="schedule.html"><i class="fas fa-calendar-alt"></i> Schedule</a>
+            <a href="coaches.html"><i class="fas fa-chalkboard-teacher"></i> Coaches</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <div class="dashboard-container">
+                <div class="content">
+                    <div class="card">
+                        <h2>Team Motto: Victory in Unity</h2>
+                        <p>Join us and witness greatness in the making.</p>
+                    </div>
+                    <div class="announcements">
+                        <h3><i class="fas fa-bullhorn"></i> Latest Announcements</h3>
+                        <div class="announcement-card">
+                            <p><strong>Next Practice:</strong> Saturday at 10:00 AM</p>
+                            <p><strong>Upcoming Game:</strong> Sunday vs. Milan Juniors</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Italy Kids. Follow us on <a href="https://www.instagram.com/mo_little11/?__pwa=1#"><i class="fab fa-instagram"></i> Instagram</a>.</p>
+    </footer>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
+            authDomain: "learning-56336.firebaseapp.com",
+            projectId: "learning-56336",
+            storageBucket: "learning-56336.appspot.com",
+            messagingSenderId: "1097871497996",
+            appId: "1:1097871497996:web:ea6ed217bce6685a978729",
+            measurementId: "G-MT2NESLNZS"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+
+        // DOM Elements
+        const userNameElement = document.getElementById('userName');
+        const userEmailElement = document.getElementById('userEmail');
+        const userAvatarElement = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                // User is not logged in, redirect to login page
+                window.location.href = 'index.html';
+            } else {
+                // Display user info
+                userEmailElement.textContent = user.email;
+                
+                // Use displayName if available, otherwise use email prefix
+                const displayName = user.displayName || user.email.split('@')[0];
+                userNameElement.textContent = `Welcome, ${displayName}!`;
+                
+                // Set avatar initial
+                const avatarInitial = displayName.charAt(0).toUpperCase();
+                userAvatarElement.innerHTML = ''; // Clear the default icon
+                userAvatarElement.textContent = avatarInitial;
+                
+                // Set random background color for avatar
+                const colors = ['#E63946', '#1D3557', '#457B9D', '#A8DADC', '#009966'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                userAvatarElement.style.backgroundColor = randomColor;
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('There was a problem logging out. Please try again.');
+            }
+        });
+
+        // Add loading state to logout button
+        logoutBtn.addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>

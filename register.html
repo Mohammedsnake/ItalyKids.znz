@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italy Kids - Register</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0078D7;
+            --primary-dark: #0068b7;
+            --secondary: #E63946;
+            --light: #F1FAEE;
+            --dark: #1D3557;
+            --success: #4CAF50;
+            --italy-blue: #0066CC;
+            --italy-green: #009966;
+            --italy-red: #E32017;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--italy-blue), var(--dark));
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--light);
+        }
+
+        .register-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(45deg, var(--italy-green), var(--italy-blue));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid white;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.3);
+            background-color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--italy-red);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: #c11a12;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .google {
+            background-color: #DB4437;
+        }
+
+        .facebook {
+            background-color: #4267B2;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            min-height: 20px;
+            display: none;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: var(--success);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            min-height: 20px;
+            display: none;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 70%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">
+            <img src="assets/Logo.png" alt="Italy Kids Logo" class="logo-image">
+        </div>
+        <h1>Create Your Account</h1>
+        
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="registerForm">
+            <div class="input-group">
+                <label for="userName">Name</label>
+                <input type="text" id="userName" placeholder="Enter your name" autocomplete="name" required>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" autocomplete="email" required>
+            </div>
+            
+            <div class="input-group password-container">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" required minlength="6">
+                <i class="toggle-password fas fa-eye" id="togglePassword"></i>
+            </div>
+            
+            <div class="input-group password-container">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required minlength="6">
+                <i class="toggle-password fas fa-eye" id="toggleConfirmPassword"></i>
+            </div>
+            
+            <button type="submit" id="registerBtn">
+                <span id="registerText">Register</span>
+                <i class="fas fa-spinner fa-spin" id="registerSpinner" style="display: none;"></i>
+            </button>
+        </form>
+        
+        <div class="links">
+            <a href="index.html">Already have an account? Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
+            authDomain: "learning-56336.firebaseapp.com",
+            projectId: "learning-56336",
+            storageBucket: "learning-56336.appspot.com",
+            messagingSenderId: "1097871497996",
+            appId: "1:1097871497996:web:ea6ed217bce6685a978729",
+            measurementId: "G-MT2NESLNZS"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+
+        // DOM Elements
+        const registerForm = document.getElementById('registerForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const userNameInput = document.getElementById('userName');
+        const registerBtn = document.getElementById('registerBtn');
+        const registerText = document.getElementById('registerText');
+        const registerSpinner = document.getElementById('registerSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+        // Form Submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const userName = userNameInput.value.trim();
+            
+            // Validation
+            if (!userName) {
+                showError('Please enter your name');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            try {
+                showLoading();
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                
+                // Update user profile with display name
+                await userCredential.user.updateProfile({
+                    displayName: userName
+                });
+                
+                showSuccess('Registration successful! Redirecting...');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // Utility Functions
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function showLoading() {
+            registerBtn.disabled = true;
+            registerText.style.display = 'none';
+            registerSpinner.style.display = 'block';
+        }
+
+        function hideLoading() {
+            registerBtn.disabled = false;
+            registerText.style.display = 'block';
+            registerSpinner.style.display = 'none';
+        }
+
+        function handleAuthError(error) {
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    showError('Email is already in use');
+                    break;
+                case 'auth/invalid-email':
+                    showError('Invalid email address');
+                    break;
+                case 'auth/weak-password':
+                    showError('Password is too weak');
+                    break;
+                case 'auth/operation-not-allowed':
+                    showError('Email/password accounts are not enabled');
+                    break;
+                default:
+                    showError('Registration failed. Please try again.');
+                    console.error('Registration error:', error);
+            }
+        }
+
+        // Password visibility toggle
+        togglePassword.addEventListener('click', function() {
+            togglePasswordVisibility(passwordInput, this);
+        });
+
+        toggleConfirmPassword.addEventListener('click', function() {
+            togglePasswordVisibility(confirmPasswordInput, this);
+        });
+
+        function togglePasswordVisibility(input, icon) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>
