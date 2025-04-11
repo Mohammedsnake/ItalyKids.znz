@@ -18,6 +18,7 @@
             --light: #F1FAEE;
             --dark: #1D3557;
             --success: #4CAF50;
+            --warning: #FF9800;
             --italy-blue: #0066CC;
             --italy-green: #009966;
             --italy-red: #E32017;
@@ -51,7 +52,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .logo-image{
+        .logo-image {
             width: 100px;
             height: 100px;
             margin: 0 auto 1.5rem;
@@ -186,6 +187,8 @@
             display: flex;
             justify-content: space-between;
             margin-top: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         a {
@@ -224,6 +227,18 @@
             text-align: center;
         }
 
+        .warning-message {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            min-height: 20px;
+            display: none;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 5px;
+            text-align: center;
+        }
+
         .password-container {
             position: relative;
         }
@@ -231,10 +246,51 @@
         .toggle-password {
             position: absolute;
             right: 10px;
-            top: 70%;
+            top: 60%;
             transform: translateY(-50%);
             cursor: pointer;
             color: var(--dark);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 0;
         }
 
         @media (max-width: 480px) {
@@ -242,28 +298,44 @@
                 padding: 1.5rem;
                 width: 95%;
             }
+            
+            .links {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <div class="login-container" id="main-content">
         <div class="logo">
-            <img src="assets/Logo.png" alt="Your Logo" class="logo-image">
+            <img src="assets/Logo.png" alt="Italy Kids Logo" class="logo-image">
         </div>
         <h1>Welcome to Italy Kids</h1>
         
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
+        <div class="success-message" id="successMessage" role="status" aria-live="polite"></div>
+        <div class="warning-message" id="warningMessage" role="alert" aria-live="polite"></div>
         
         <div class="input-group">
             <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" autocomplete="username">
+            <input type="email" id="email" placeholder="Enter your email" autocomplete="username" aria-label="Email address" aria-required="true">
         </div>
         
         <div class="input-group password-container">
             <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
-            <i class="toggle-password fas fa-eye" id="togglePassword"></i>
+            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" aria-label="Password" aria-required="true">
+            <i class="toggle-password fas fa-eye" id="togglePassword" aria-label="Toggle password visibility"></i>
+            <div class="password-strength">
+                <div class="password-strength-bar" id="passwordStrength"></div>
+            </div>
+        </div>
+        
+        <div class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            <label for="rememberMe">Remember me</label>
         </div>
         
         <button id="loginBtn">
@@ -274,11 +346,11 @@
         <div class="divider">OR</div>
         
         <div class="social-login">
-            <div class="social-btn google" id="googleLogin">
+            <div class="social-btn google" id="googleLogin" aria-label="Sign in with Google">
                 <i class="fab fa-google" id="googleIcon"></i>
                 <i class="fas fa-spinner fa-spin" id="googleSpinner" style="display: none;"></i>
             </div>
-            <div class="social-btn facebook" id="facebookLogin">
+            <div class="social-btn facebook" id="facebookLogin" aria-label="Sign in with Facebook">
                 <i class="fab fa-facebook-f" id="facebookIcon"></i>
                 <i class="fas fa-spinner fa-spin" id="facebookSpinner" style="display: none;"></i>
             </div>
@@ -297,7 +369,7 @@
             apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
             authDomain: "learning-56336.firebaseapp.com",
             projectId: "learning-56336",
-            storageBucket: "learning-56336.firebasestorage.app",
+            storageBucket: "learning-56336.appspot.com",
             messagingSenderId: "1097871497996",
             appId: "1:1097871497996:web:ea6ed217bce6685a978729",
             measurementId: "G-MT2NESLNZS"
@@ -328,6 +400,46 @@
         const privacyPolicy = document.getElementById('privacyPolicy');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
+        const warningMessage = document.getElementById('warningMessage');
+        const rememberMe = document.getElementById('rememberMe');
+        const passwordStrength = document.getElementById('passwordStrength');
+
+        // Session timeout variables
+        let timeoutWarning;
+        const TIMEOUT_DURATION = 30 * 60 * 1000; // 30 minutes
+        let recaptchaVerifier;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set up recaptcha
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('loginBtn', {
+                size: 'invisible',
+                callback: () => {
+                    // reCAPTCHA solved, proceed with login
+                }
+            });
+
+            // Auto-focus email field
+            emailInput.focus();
+
+            // Check auth state
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    redirectToDashboard();
+                }
+            });
+
+            // Initialize button original text
+            document.querySelectorAll('button').forEach(button => {
+                button.dataset.originalText = button.innerHTML;
+            });
+
+            // Set up session timeout
+            resetTimeout();
+            ['mousemove', 'keypress', 'click'].forEach(event => {
+                document.addEventListener(event, resetTimeout);
+            });
+        });
 
         // Toggle Password Visibility
         togglePassword.addEventListener('click', () => {
@@ -335,7 +447,41 @@
             passwordInput.setAttribute('type', type);
             togglePassword.classList.toggle('fa-eye');
             togglePassword.classList.toggle('fa-eye-slash');
+            togglePassword.setAttribute('aria-label', 
+                type === 'password' ? 'Show password' : 'Hide password');
         });
+
+        // Password strength indicator
+        passwordInput.addEventListener('input', () => {
+            updatePasswordStrength(passwordInput.value);
+        });
+
+        function updatePasswordStrength(password) {
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            
+            // Complexity checks
+            if (/[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            // Cap at 5
+            strength = Math.min(strength, 5);
+            
+            // Update visual indicator
+            const width = strength * 20;
+            let color;
+            
+            if (strength <= 1) color = '#ff5252'; // Red
+            else if (strength <= 3) color = '#ffb142'; // Orange
+            else color = '#33d9b2'; // Green
+            
+            passwordStrength.style.width = `${width}%`;
+            passwordStrength.style.backgroundColor = color;
+        }
 
         // Email/Password Login
         loginBtn.addEventListener('click', async () => {
@@ -344,17 +490,36 @@
             
             if (!validateEmail(email)) {
                 showError('Please enter a valid email address');
+                emailInput.focus();
                 return;
             }
 
             if (password.length < 6) {
                 showError('Password must be at least 6 characters');
+                passwordInput.focus();
                 return;
             }
 
             try {
                 showLoading(loginBtn, loginText, loginSpinner);
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                
+                // Set auth persistence
+                await auth.setPersistence(
+                    rememberMe.checked 
+                        ? firebase.auth.Auth.Persistence.LOCAL 
+                        : firebase.auth.Auth.Persistence.SESSION
+                );
+                
+                const userCredential = await auth.signInWithEmailAndPassword(email, password)
+                    .catch(error => {
+                        if (error.code === 'auth/multi-factor-auth-required') {
+                            // Handle MFA
+                            handleMFA(error.resolver);
+                        } else {
+                            throw error;
+                        }
+                    });
+                
                 logEvent('login_success', { method: 'email' });
                 showSuccess('Login successful! Redirecting...');
                 redirectToDashboard();
@@ -421,6 +586,7 @@
             
             if (!validateEmail(email)) {
                 showError('Please enter a valid email address');
+                emailInput.focus();
                 return;
             }
 
@@ -428,12 +594,25 @@
                 showLoading(forgotPassword);
                 await auth.sendPasswordResetEmail(email);
                 logEvent('password_reset_request');
-                showSuccess(`Password reset link sent to ${email}`);
+                showSuccess(`Password reset link sent to ${email}. Check your inbox.`);
             } catch (error) {
                 logEvent('password_reset_error', { error: error.code });
                 handleAuthError(error);
             } finally {
                 hideLoading(forgotPassword);
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (document.activeElement === emailInput) {
+                    passwordInput.focus();
+                    e.preventDefault();
+                } else if (document.activeElement === passwordInput) {
+                    loginBtn.click();
+                    e.preventDefault();
+                }
             }
         });
 
@@ -467,30 +646,49 @@
             console.error('Auth error:', error);
             
             const errorMap = {
-                'auth/invalid-email': 'Invalid email address',
-                'auth/user-disabled': 'Account disabled',
-                'auth/user-not-found': 'No account found with this email',
-                'auth/wrong-password': 'Incorrect password',
-                'auth/email-already-in-use': 'Email already in use',
-                'auth/operation-not-allowed': 'Login method not enabled',
-                'auth/weak-password': 'Password must be 6+ characters',
-                'auth/popup-closed-by-user': 'Login popup was closed',
-                'auth/account-exists-with-different-credential': 'Account exists with different login method',
-                'auth/auth-domain-config-required': 'Domain not authorized',
-                'auth/operation-not-supported-in-this-environment': 'Operation not supported',
-                'auth/unauthorized-domain': 'Unauthorized domain',
-                'auth/network-request-failed': 'Network error. Check connection',
-                'auth/too-many-requests': 'Too many attempts. Try again later',
-                'auth/cancelled-popup-request': 'Multiple popup attempts detected'
+                'auth/invalid-email': 'Please enter a valid email address',
+                'auth/user-disabled': 'Your account has been disabled. Please contact support.',
+                'auth/user-not-found': 'No account found with this email. Would you like to create one?',
+                'auth/wrong-password': 'The password you entered is incorrect. Please try again or reset your password.',
+                'auth/email-already-in-use': 'This email is already registered. Try logging in instead.',
+                'auth/operation-not-allowed': 'This login method is currently unavailable.',
+                'auth/weak-password': 'Your password should be at least 6 characters long.',
+                'auth/popup-closed-by-user': 'The login window was closed before completing the process.',
+                'auth/account-exists-with-different-credential': 'This email is already registered with a different login method.',
+                'auth/requires-recent-login': 'For security reasons, please log in again to perform this action.',
+                'auth/network-request-failed': 'Network error. Please check your internet connection and try again.',
+                'auth/too-many-requests': 'Too many login attempts. Please try again later or reset your password.',
+                'auth/captcha-check-failed': 'Security check failed. Please try again.',
+                'auth/invalid-verification-code': 'The verification code is invalid or has expired.',
+                'auth/invalid-verification-id': 'The verification process failed. Please try again.',
+                'auth/missing-verification-code': 'Verification code is required.',
+                'auth/missing-verification-id': 'Verification process failed to start.',
+                'auth/quota-exceeded': 'Service quota exceeded. Please try again later.'
             };
 
-            showError(errorMap[error.code] || `Login failed: ${error.message}`);
+            const defaultMessage = 'An unexpected error occurred. Please try again.';
+            const userMessage = errorMap[error.code] || defaultMessage;
+            
+            showError(userMessage);
+            
+            // For certain errors, suggest actions
+            if (error.code === 'auth/user-not-found') {
+                const registerLink = document.createElement('a');
+                registerLink.href = 'register.html';
+                registerLink.textContent = ' Create account';
+                registerLink.style.marginLeft = '5px';
+                registerLink.style.color = 'white';
+                registerLink.style.textDecoration = 'underline';
+                
+                errorMessage.appendChild(registerLink);
+            }
         }
 
         function showError(message) {
-            errorMessage.textContent = message;
+            errorMessage.innerHTML = message;
             errorMessage.style.display = 'block';
             successMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
             
             setTimeout(() => {
                 errorMessage.style.display = 'none';
@@ -501,10 +699,22 @@
             successMessage.textContent = message;
             successMessage.style.display = 'block';
             errorMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
             
             setTimeout(() => {
                 successMessage.style.display = 'none';
             }, 3000);
+        }
+
+        function showWarning(message) {
+            warningMessage.textContent = message;
+            warningMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            setTimeout(() => {
+                warningMessage.style.display = 'none';
+            }, 5000);
         }
 
         function redirectToDashboard() {
@@ -520,17 +730,19 @@
             console.log(`Event: ${eventName}`, params);
         }
 
-        // Check auth state on load
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                redirectToDashboard();
-            }
-        });
+        function resetTimeout() {
+            clearTimeout(timeoutWarning);
+            timeoutWarning = setTimeout(() => {
+                showWarning('Your session will expire soon due to inactivity.');
+            }, TIMEOUT_DURATION - (5 * 60 * 1000)); // Warn 5 minutes before
+        }
 
-        // Initialize button original text
-        document.querySelectorAll('button').forEach(button => {
-            button.dataset.originalText = button.innerHTML;
-        });
+        function handleMFA(resolver) {
+            // This is a placeholder for MFA handling
+            // In a real implementation, you would prompt the user for their second factor
+            showError('Multi-factor authentication required. Please try another login method.');
+            console.log('MFA required', resolver);
+        }
     </script>
 </body>
 </html>

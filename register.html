@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Italy Kids - Register</title>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Styles -->
     <style>
         :root {
             --primary: #0078D7;
@@ -61,11 +65,6 @@
             align-items: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             border: 3px solid white;
-        }
-
-        .logo i {
-            font-size: 3rem;
-            color: white;
         }
 
         h1 {
@@ -121,7 +120,7 @@
             gap: 8px;
         }
 
-        button:hover {
+        button:hover:enabled {
             background-color: #c11a12;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -134,58 +133,36 @@
             box-shadow: none;
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: rgba(255, 255, 255, 0.7);
+        .error-message, .success-message {
+            font-size: 0.9rem;
+            min-height: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 1rem;
+            background-color: rgba(255,255,255,0.9);
+            display: none;
         }
 
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        .error-message {
+            color: var(--secondary);
         }
 
-        .divider::before {
-            margin-right: 1rem;
+        .success-message {
+            color: var(--success);
         }
 
-        .divider::after {
-            margin-left: 1rem;
+        .password-container {
+            position: relative;
         }
 
-        .social-login {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .social-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 1.2rem;
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 70%;
+            transform: translateY(-50%);
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .google {
-            background-color: #DB4437;
-        }
-
-        .facebook {
-            background-color: #4267B2;
-        }
-
-        .social-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: var(--dark);
         }
 
         .links {
@@ -206,47 +183,14 @@
             text-decoration: underline;
         }
 
-        .error-message {
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            min-height: 20px;
-            display: none;
-            padding: 10px;
-            background-color: rgba(255,255,255,0.9);
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .success-message {
-            color: var(--success);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            min-height: 20px;
-            display: none;
-            padding: 10px;
-            background-color: rgba(255,255,255,0.9);
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 70%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--dark);
-        }
-
         @media (max-width: 480px) {
             .register-container {
                 padding: 1.5rem;
                 width: 95%;
+            }
+
+            input, button {
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -254,49 +198,49 @@
 <body>
     <div class="register-container">
         <div class="logo">
-            <img src="assets/Logo.png" alt="Italy Kids Logo" class="logo-image">
+            <img src="assets/Logo.png" alt="Italy Kids Logo" class="logo-image" />
         </div>
         <h1>Create Your Account</h1>
-        
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
 
-        <form id="registerForm">
+        <div class="error-message" id="errorMessage" role="alert"></div>
+        <div class="success-message" id="successMessage" role="status"></div>
+
+        <form id="registerForm" aria-label="Registration Form">
             <div class="input-group">
                 <label for="userName">Name</label>
-                <input type="text" id="userName" placeholder="Enter your name" autocomplete="name" required>
+                <input type="text" id="userName" placeholder="Enter your name" autocomplete="name" required />
             </div>
 
             <div class="input-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your email" autocomplete="email" required>
+                <input type="email" id="email" placeholder="Enter your email" autocomplete="email" required />
             </div>
-            
+
             <div class="input-group password-container">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" required minlength="6">
-                <i class="toggle-password fas fa-eye" id="togglePassword"></i>
+                <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" required minlength="6" />
+                <i class="toggle-password fas fa-eye" id="togglePassword" aria-label="Toggle Password Visibility"></i>
             </div>
-            
+
             <div class="input-group password-container">
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required minlength="6">
-                <i class="toggle-password fas fa-eye" id="toggleConfirmPassword"></i>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password" autocomplete="off" required minlength="6" />
+                <i class="toggle-password fas fa-eye" id="toggleConfirmPassword" aria-label="Toggle Confirm Password Visibility"></i>
             </div>
-            
+
             <button type="submit" id="registerBtn">
                 <span id="registerText">Register</span>
                 <i class="fas fa-spinner fa-spin" id="registerSpinner" style="display: none;"></i>
             </button>
         </form>
-        
+
         <div class="links">
             <a href="index.html">Already have an account? Login</a>
         </div>
     </div>
 
+    <!-- Script -->
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
             authDomain: "learning-56336.firebaseapp.com",
@@ -307,13 +251,12 @@
             measurementId: "G-MT2NESLNZS"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+
         const auth = firebase.auth();
 
-        // DOM Elements
         const registerForm = document.getElementById('registerForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -327,60 +270,36 @@
         const togglePassword = document.getElementById('togglePassword');
         const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
 
-        // Form Submission
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+            if (registerBtn.disabled) return;
+
             const email = emailInput.value.trim();
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
             const userName = userNameInput.value.trim();
-            
-            // Validation
-            if (!userName) {
-                showError('Please enter your name');
-                return;
-            }
-            
-            if (!validateEmail(email)) {
-                showError('Please enter a valid email address');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showError('Password must be at least 6 characters');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showError('Passwords do not match');
-                return;
-            }
-            
+
+            if (!userName) return showError('Please enter your name');
+            if (!validateEmail(email)) return showError('Please enter a valid email');
+            if (password.length < 6) return showError('Password must be at least 6 characters');
+            if (password !== confirmPassword) return showError('Passwords do not match');
+
             try {
                 showLoading();
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                
-                // Update user profile with display name
-                await userCredential.user.updateProfile({
-                    displayName: userName
-                });
-                
+                await userCredential.user.updateProfile({ displayName: userName });
                 showSuccess('Registration successful! Redirecting...');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                setTimeout(() => window.location.href = 'index.html', 1500);
             } catch (error) {
                 handleAuthError(error);
+                console.error('Registration error:', error);
             } finally {
                 hideLoading();
             }
         });
 
-        // Utility Functions
         function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
         function showError(message) {
@@ -398,55 +317,33 @@
         function showLoading() {
             registerBtn.disabled = true;
             registerText.style.display = 'none';
-            registerSpinner.style.display = 'block';
+            registerSpinner.style.display = 'inline-block';
         }
 
         function hideLoading() {
             registerBtn.disabled = false;
-            registerText.style.display = 'block';
+            registerText.style.display = 'inline-block';
             registerSpinner.style.display = 'none';
         }
 
         function handleAuthError(error) {
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    showError('Email is already in use');
-                    break;
-                case 'auth/invalid-email':
-                    showError('Invalid email address');
-                    break;
-                case 'auth/weak-password':
-                    showError('Password is too weak');
-                    break;
-                case 'auth/operation-not-allowed':
-                    showError('Email/password accounts are not enabled');
-                    break;
-                default:
-                    showError('Registration failed. Please try again.');
-                    console.error('Registration error:', error);
-            }
+            const code = error.code;
+            if (code === 'auth/email-already-in-use') showError('Email is already in use');
+            else if (code === 'auth/invalid-email') showError('Invalid email address');
+            else if (code === 'auth/weak-password') showError('Password is too weak');
+            else if (code === 'auth/operation-not-allowed') showError('Email/password signups not enabled');
+            else showError('Registration failed. Please try again.');
         }
-
-        // Password visibility toggle
-        togglePassword.addEventListener('click', function() {
-            togglePasswordVisibility(passwordInput, this);
-        });
-
-        toggleConfirmPassword.addEventListener('click', function() {
-            togglePasswordVisibility(confirmPasswordInput, this);
-        });
 
         function togglePasswordVisibility(input, icon) {
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !isHidden);
+            icon.classList.toggle('fa-eye-slash', isHidden);
         }
+
+        togglePassword.addEventListener('click', () => togglePasswordVisibility(passwordInput, togglePassword));
+        toggleConfirmPassword.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword));
     </script>
 </body>
 </html>
