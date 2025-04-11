@@ -3,45 +3,418 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery - Italy Kids</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>Gallery - Italy Kids FC</title>
+  <meta name="description" content="Photo and video highlights from Italy Kids FC matches, training sessions, and team events">
+  <style>
+    :root {
+      --primary: #0066CC;
+      --secondary: #009966;
+      --accent: #E32017;
+      --light: #F1FAEE;
+      --dark: #1D3557;
+      --text: #333333;
+      --background: #f9f9f9;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    nav a:hover, nav a:focus {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    #gallery {
+      padding: 1rem 0;
+    }
+    
+    #gallery h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem 0;
+    }
+    
+    .gallery-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      aspect-ratio: 1 / 1;
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+    
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+   
+    .gallery-item.video::before {
+      content: "▶";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: white;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .gallery-item:hover .caption {
+      opacity: 1;
+    }
+    
+    .filter-controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1.2rem;
+      background-color: white;
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: var(--dark);
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    /* Lightbox styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90%;
+    }
+    
+    .lightbox-content img, .lightbox-content video {
+      max-width: 100%;
+      max-height: 80vh;
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .lightbox-caption {
+      color: white;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .close-lightbox {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .filter-controls {
+        gap: 0.5rem;
+      }
+      
+      .filter-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Gallery - Italy Kids</h1>
+    <h1>Italy Kids FC Gallery</h1>
     <nav>
       <a href="dashboard.html">Home</a>
       <a href="about.html">About</a>
       <a href="players.html">Players</a>
-      <a href="gallery.html">Gallery</a>
+      <a href="gallery.html" class="active">Gallery</a>
       <a href="schedule.html">Schedule</a>
-       <a href="coaches.html">Coaches</a>
+      <a href="coaches.html">Coaches</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
+  
   <main>
     <section id="gallery">
-      <h2>Photo & Video Highlights</h2>
+      <h2>Our Moments in Action</h2>
+      
+      <div class="filter-controls">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="matches">Matches</button>
+        <button class="filter-btn" data-filter="training">Training</button>
+        <button class="filter-btn" data-filter="team">Team Photos</button>
+        <button class="filter-btn" data-filter="videos">Videos</button>
+      </div>
+      
       <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="images/match1.jpg" alt="Match 1">
+        <!-- Match Photos -->
+        <div class="gallery-item" data-category="matches" data-caption="Italy Kids vs. Kisiki FC - 2024">
+          <img src="assets/match1.jpg" alt="MO Snake on the Picture on Italy Kids vs Italy Legends derby">
+          <div class="caption">Italy Kids vs. Italy Legends - 2024</div>
         </div>
-        <div class="gallery-item">
-          <img src="images/training1.jpg" alt="Training Session">
+        
+        <div class="gallery-item" data-category="matches" data-caption="Ramadhan Tournament Final">
+          <img src="assets/match2.jpg" alt="Italy Kids vs. Italy Legends">
+          <div class="caption">Final Results - Kisakasaka</div>
         </div>
-        <div class="gallery-item">
-          <img src="images/team1.jpg" alt="Team Photo">
+        
+        <!-- Training Photos -->
+        <div class="gallery-item" data-category="training" data-caption="Team training session">
+          <img src="assets/train1.jpg" alt="Team training drills">
+          <div class="caption">Team training session</div>
         </div>
-        <div class="gallery-item">
-          <img src="images/match2.jpg" alt="Match 2">
+        
+        <div class="gallery-item" data-category="training" data-caption="Goalkeeper practice">
+          <img src="assets/train2.jpg" alt="Goalkeeper during practice">
+          <div class="caption">Jogging via Michenzani Stadium - 2023</div>
         </div>
-        <!-- Add more images or videos here -->
+        
+        <!-- Team Photos -->
+        <div class="gallery-item" data-category="team" data-caption="2024 Team Photo">
+          <img src="assets/squad1.jpg" alt="Official team squad 2024">
+          <div class="caption">2024 Team Squad</div>
+        </div>
+        
+        <div class="gallery-item" data-category="team" data-caption="Team bonding day">
+          <img src="assets/squad2.jpg" alt="Players during team bonding">
+          <div class="caption">Futsal Team bonding - 2024</div>
+        </div>
+        
+        <!-- Videos -->
+        <div class="gallery-item video" data-category="videos" data-caption="Match highlights - Kapa & Sharo's Cup">
+          <img src="assets/vid1.mp4" alt="Video thumbnail">
+          <div class="caption">Training under the Rain - 2024</div>
+        </div>
+        
+        <div class="gallery-item video" data-category="videos" data-caption="Training session highlights">
+          <img src="assets/vid2.mp4" alt="Video thumbnail">
+          <div class="caption">MO Snake's Magic - 2024</div>
+        </div>
+        
+        <!-- Add more gallery items following the same pattern -->
       </div>
     </section>
+    
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+      <span class="close-lightbox">&times;</span>
+      <div class="lightbox-content">
+        <img id="lightbox-image" src="" alt="">
+        <video id="lightbox-video" controls style="display: none;">
+          <source src="" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+    </div>
   </main>
+  
   <footer>
-    <p>© 2025 Italy Kids. Relive the action!</p>
+    <p>© 2025 Italy Kids FC. Relive the action!</p>
+    <p>Fuoni Melisaba, Zanzibar</p>
   </footer>
-  <script src="js/script.js"></script>
+
+  <script>
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.dataset.filter;
+        const items = document.querySelectorAll('.gallery-item');
+        
+        items.forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // Lightbox functionality
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-image');
+    const lightboxVideo = document.getElementById('lightbox-video');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const closeBtn = document.querySelector('.close-lightbox');
+    
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const isVideo = this.classList.contains('video');
+        const imgSrc = this.querySelector('img').src;
+        const caption = this.dataset.caption;
+        
+        if (isVideo) {
+          lightboxImg.style.display = 'none';
+          lightboxVideo.style.display = 'block';
+          lightboxVideo.src = imgSrc.replace('-thumb', '');
+          lightboxVideo.play();
+        } else {
+          lightboxVideo.style.display = 'none';
+          lightboxVideo.pause();
+          lightboxImg.style.display = 'block';
+          lightboxImg.src = imgSrc;
+        }
+        
+        lightboxCaption.textContent = caption;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    closeBtn.addEventListener('click', function() {
+      lightbox.style.display = 'none';
+      lightboxVideo.pause();
+      document.body.style.overflow = 'auto';
+    });
+    
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) {
+        lightbox.style.display = 'none';
+        lightboxVideo.pause();
+        document.body.style.overflow = 'auto';
+      }
+    });
+    
+    // Close lightbox with ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+        lightbox.style.display = 'none';
+        lightboxVideo.pause();
+        document.body.style.overflow = 'auto';
+      }
+    });
+  </script>
 </body>
 </html>

@@ -3,52 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Us - Italy Kids</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>About Us - Italy Kids Football Team</title>
+  <meta name="description" content="Learn about Italy Kids football team from Fuoni Melisaba, Zanzibar - our history, achievements, and mission">
+  <style>
+    :root {
+      --primary: #0066CC;
+      --secondary: #009966;
+      --accent: #E32017;
+      --light: #F1FAEE;
+      --dark: #1D3557;
+      --text: #333333;
+      --background: #f9f9f9;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    nav a:hover, nav a:focus {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    section {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    }
+    
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--secondary);
+      font-size: 1.5rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    
+    ul {
+      padding-left: 1.25rem;
+      list-style-type: none;
+    }
+    
+    li {
+      margin-bottom: 0.75rem;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    
+    li::before {
+      content: "⚽";
+      position: absolute;
+      left: 0;
+    }
+    
+    #team-history p {
+      text-align: justify;
+    }
+    
+    .achievement-highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+    
+    #mission {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-left: 5px solid var(--accent);
+    }
+    
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .value-item h3 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: var(--dark);
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    /* Desktop-specific styles */
+    @media (min-width: 768px) {
+      header {
+        padding: 2rem 1rem;
+      }
+      
+      nav {
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      
+      nav a {
+        font-size: 1rem;
+      }
+      
+      section {
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+      
+      #team-history p {
+        column-count: 2;
+        column-gap: 2rem;
+      }
+    }
+    
+    /* Mobile-specific adjustments */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      h2 {
+        font-size: 1.3rem;
+      }
+      
+      section {
+        padding: 1.25rem;
+      }
+      
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>About Italy Kids</h1>
+    <h1>About Italy Kids FC</h1>
     <nav>
       <a href="dashboard.html">Home</a>
-      <a href="about.html">About</a>
+      <a href="about.html" class="active">About</a>
       <a href="players.html">Players</a>
       <a href="gallery.html">Gallery</a>
       <a href="schedule.html">Schedule</a>
-       <a href="coaches.html">Coaches</a>
+      <a href="coaches.html">Coaches</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
+  
   <main>
     <section id="team-history">
-      <h2>Our Story</h2>
+      <h2>Our Humble Beginnings</h2>
       <p>
-        Italy Kids was founded in 2018 in Fuoni Melisaba, a vibrant neighborhood in Zanzibar, Tanzania, with a simple yet powerful vision: to unite people through the shared passion for football. The team was born from the camaraderie and spirit of the local community, especially a group of friends who often gathered on a street affectionately known as “Italy”—a name that would later inspire the team itself.
-
-What started as a group of friends kicking a ball around in the streets quickly grew into something much greater. Italy Kids evolved into a dedicated and competitive team, fueled by a love for the game and a deep connection to their roots. Over the years, the team has become a symbol of unity and determination for the neighborhood, celebrating both triumphs on the field and the bonds formed off it.
-
-Through hard work and perseverance, Italy Kids has achieved significant milestones, earning recognition within local football circles and beyond. Beyond the matches and trophies, the team is a testament to the power of friendship and the ability of sport to inspire and bring people together. The legacy of the Italy Kids is not just in their skills on the pitch, but in the unbreakable spirit they bring to their community.
+        <span class="achievement-highlight">Italy Kids FC</span> was founded in 2018 in the heart of Fuoni Melisaba, Zanzibar, where a group of passionate young footballers transformed their street games into something extraordinary. The team takes its name from the local street known as "Italy" - a place where dreams were born and friendships forged through football.
+      </p>
+      <p>
+        What began as casual matches among friends quickly grew into a competitive force. The team's early days were marked by makeshift goals and barefoot matches, but their talent and determination were undeniable. As word spread, more players joined, and soon <span class="achievement-highlight">Italy Kids became the pride of Fuoni Melisaba</span>.
+      </p>
+      <p>
+        The turning point came in 2018 when the team entered their first official tournament. Against all odds, these street footballers proved their mettle, capturing the attention of the local football community. Today, while maintaining their grassroots spirit, Italy Kids has evolved into one of Zanzibar's most respected amateur teams, staying true to their roots while reaching for greater heights.
       </p>
     </section>
+    
     <section id="achievements">
-      <h2>Achievements</h2>
+      <h2>Our Trophy Cabinet</h2>
       <ul>
-        <li>Champions of Ramadhan Tournament - 2018,2019</li>
-        <li>Runners-up in Kapa & Sharo's Cup - 2021</li>
-        <li>7+ Years of fostering community spirit through football</li>
-        <li>Consistently recognized as the top team in Fuoni City</li>
-        <li>Multiple victories in the Italy Derby, triumphing over Kisiki FC</li>
+        <li><strong>Back-to-Back Champions</strong> of the prestigious Ramadhan Tournament (2018 & 2019)</li>
+        <li><strong>Finalists</strong> in Kapa & Sharo's Cup 2021 - a remarkable underdog story</li>
+        <li><strong>7+ Years</strong> of uniting our community through the beautiful game</li>
+        <li><strong>Undisputed Kings of Fuoni</strong> - consistently ranked #1 in our district</li>
+        <li><strong>Derby Dominance</strong> - multiple victories against arch-rivals Kisiki FC</li>
+        <li><strong>Community Impact Award</strong> 2022 for youth development initiatives</li>
       </ul>
     </section>
+    
+    <section id="values">
+      <h2>Our Core Values</h2>
+      <div class="values-grid">
+        <div class="value-item">
+          <h3>Unity</h3>
+          <p>We believe football has the power to bring people together regardless of background or circumstance.</p>
+        </div>
+        <div class="value-item">
+          <h3>Passion</h3>
+          <p>Our love for the game fuels our dedication both on and off the pitch.</p>
+        </div>
+        <div class="value-item">
+          <h3>Community</h3>
+          <p>We're more than a team - we're a family that supports and lifts each other up.</p>
+        </div>
+      </div>
+    </section>
+    
     <section id="mission">
-      <h2>Our Mission</h2>
-      <p>
-        To inspire and unite individuals through sportsmanship, teamwork, and a relentless passion for football. Together, we aim for greatness while celebrating the joy of the game.
+      <h2>The Italy Kids Promise</h2>
+      <p style="font-size: 1.1rem; font-style: italic; text-align: center;">
+        "To inspire the next generation through football excellence, sportsmanship, and community spirit. We play not just to win, but to honor our roots and pave the way for others to follow."
       </p>
     </section>
   </main>
+  
   <footer>
-    <p>© 2025 Italy Kids. Powered by passion for football.</p>
+    <p>© 2025 Italy Kids FC. All rights reserved.</p>
+    <p style="margin-top: 0.5rem;">Fuoni Melisaba, Zanzibar | Founded 2018</p>
   </footer>
 </body>
 </html>

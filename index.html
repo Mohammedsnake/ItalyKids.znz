@@ -10,49 +10,73 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0078D7;
-            --primary-dark: #0068b7;
-            --secondary: #E63946;
-            --light: #F1FAEE;
-            --dark: #1D3557;
-            --success: #4CAF50;
-            --warning: #FF9800;
             --italy-blue: #0066CC;
             --italy-green: #009966;
             --italy-red: #E32017;
+            --italy-white: #FFFFFF;
+            --light: #F1FAEE;
+            --dark: #1D3557;
+            --success: #4CAF50;
+            --error: #E63946;
+            --warning: #FF9800;
+            --info: #2196F3;
+            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.2);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 16px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, var(--italy-blue), var(--italy-green));
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--light);
+            padding: 20px;
+            line-height: 1.6;
         }
 
         .login-container {
             background-color: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 400px;
-            padding: 2rem;
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
         }
 
-        .logo-image {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .logo-image{
             width: 100px;
             height: 100px;
             margin: 0 auto 1.5rem;
@@ -61,25 +85,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-md);
             border: 3px solid white;
-        }
-
-        .logo i {
-            font-size: 3rem;
-            color: white;
+            transition: var(--transition);
         }
 
         h1 {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             font-weight: 600;
             color: white;
+            font-size: 1.8rem;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
-        .input-group {
+        .welcome-text {
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group {
             margin-bottom: 1.5rem;
             text-align: left;
+            position: relative;
         }
 
         label {
@@ -91,42 +118,50 @@
 
         input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             background-color: rgba(255, 255, 255, 0.9);
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: var(--transition);
+            border: 2px solid transparent;
         }
 
         input:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.3);
+            border-color: var(--italy-green);
             background-color: white;
+            box-shadow: 0 0 0 3px rgba(0, 153, 102, 0.3);
         }
 
-        button {
+        .btn {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             background-color: var(--italy-red);
             color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: var(--shadow-sm);
         }
 
-        button:hover {
+        .btn:hover:enabled {
             background-color: #c11a12;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
 
         .divider {
@@ -136,7 +171,8 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .divider::before, .divider::after {
+        .divider::before,
+        .divider::after {
             content: "";
             flex: 1;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -158,8 +194,8 @@
         }
 
         .social-btn {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -167,7 +203,13 @@
             color: white;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
 
         .google {
@@ -178,65 +220,53 @@
             background-color: #4267B2;
         }
 
-        .social-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
         .links {
             display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
-        a {
+        .link {
             color: var(--light);
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
-        a:hover {
+        .link:hover {
             color: white;
             text-decoration: underline;
         }
 
-        .error-message {
-            color: var(--secondary);
-            margin-bottom: 1rem;
+        .alert {
             font-size: 0.9rem;
-            min-height: 20px;
-            display: none;
-            padding: 10px;
-            background-color: rgba(255,255,255,0.9);
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: var(--radius-md);
             text-align: center;
+            margin-bottom: 1.5rem;
+            background-color: rgba(255,255,255,0.95);
+            display: none;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .success-message {
+        .alert-error {
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+
+        .alert-success {
             color: var(--success);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            min-height: 20px;
-            display: none;
-            padding: 10px;
-            background-color: rgba(255,255,255,0.9);
-            border-radius: 5px;
-            text-align: center;
+            border-left: 4px solid var(--success);
         }
 
-        .warning-message {
+        .alert-warning {
             color: var(--warning);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            min-height: 20px;
-            display: none;
-            padding: 10px;
-            background-color: rgba(255,255,255,0.9);
-            border-radius: 5px;
-            text-align: center;
+            border-left: 4px solid var(--warning);
         }
 
         .password-container {
@@ -245,25 +275,17 @@
 
         .toggle-password {
             position: absolute;
-            right: 10px;
+            right: 12px;
             top: 60%;
             transform: translateY(-50%);
             cursor: pointer;
             color: var(--dark);
+            transition: var(--transition);
+            padding: 8px;
         }
 
-        .password-strength {
-            margin-top: 0.5rem;
-            height: 4px;
-            background-color: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s, background-color 0.3s;
+        .toggle-password:hover {
+            color: var(--italy-blue);
         }
 
         .remember-me {
@@ -271,37 +293,127 @@
             align-items: center;
             margin-bottom: 1rem;
             cursor: pointer;
+            user-select: none;
         }
 
         .remember-me input {
             width: auto;
             margin-right: 8px;
+            accent-color: var(--italy-green);
         }
 
         .skip-link {
             position: absolute;
             top: -40px;
             left: 0;
-            background: #000;
+            background: var(--dark);
             color: white;
-            padding: 8px;
+            padding: 10px;
             z-index: 100;
             transition: top 0.3s;
+            border-radius: 0 0 var(--radius-sm) 0;
         }
-        
+
         .skip-link:focus {
             top: 0;
         }
 
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-weak {
+            background-color: var(--error);
+            width: 33%;
+        }
+
+        .strength-medium {
+            background-color: var(--warning);
+            width: 66%;
+        }
+
+        .strength-strong {
+            background-color: var(--success);
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 480px) {
             .login-container {
-                padding: 1.5rem;
-                width: 95%;
+                padding: 1.8rem;
             }
-            
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .welcome-text {
+                font-size: 0.9rem;
+            }
+
+            input, .btn {
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+
             .links {
                 flex-direction: column;
                 align-items: center;
+                gap: 0.8rem;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Floating animation for logo */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .logo-container {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Ripple effect for buttons */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
             }
         }
     </style>
@@ -310,56 +422,66 @@
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
     <div class="login-container" id="main-content">
-        <div class="logo">
+        <div class="logo-container">
             <img src="assets/Logo.png" alt="Italy Kids Logo" class="logo-image">
         </div>
+        
         <h1>Welcome to Italy Kids</h1>
+        <p class="welcome-text">Sign in to access your account and manage your team</p>
+
+        <div class="alert alert-error" id="errorMessage" role="alert" aria-live="assertive"></div>
+        <div class="alert alert-success" id="successMessage" role="status" aria-live="polite"></div>
+        <div class="alert alert-warning" id="warningMessage" role="alert" aria-live="polite"></div>
         
-        <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
-        <div class="success-message" id="successMessage" role="status" aria-live="polite"></div>
-        <div class="warning-message" id="warningMessage" role="alert" aria-live="polite"></div>
-        
-        <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" autocomplete="username" aria-label="Email address" aria-required="true">
-        </div>
-        
-        <div class="input-group password-container">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" aria-label="Password" aria-required="true">
-            <i class="toggle-password fas fa-eye" id="togglePassword" aria-label="Toggle password visibility"></i>
-            <div class="password-strength">
-                <div class="password-strength-bar" id="passwordStrength"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="your@email.com" autocomplete="username" required>
             </div>
-        </div>
-        
-        <div class="remember-me">
-            <input type="checkbox" id="rememberMe">
-            <label for="rememberMe">Remember me</label>
-        </div>
-        
-        <button id="loginBtn">
-            <span id="loginText">Login</span>
-            <i class="fas fa-spinner fa-spin" id="loginSpinner" style="display: none;"></i>
-        </button>
+            
+            <div class="form-group password-container">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required>
+                <i class="toggle-password fas fa-eye" id="togglePassword" aria-label="Toggle password visibility"></i>
+                <div class="password-strength">
+                    <div class="strength-meter" id="passwordStrength"></div>
+                </div>
+            </div>
+            
+            <div class="remember-me">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+            </div>
+            
+            <button type="submit" class="btn ripple" id="loginBtn">
+                <span id="loginText">Sign In</span>
+                <i class="fas fa-spinner spinner" id="loginSpinner" style="display: none;"></i>
+            </button>
+        </form>
         
         <div class="divider">OR</div>
         
         <div class="social-login">
-            <div class="social-btn google" id="googleLogin" aria-label="Sign in with Google">
+            <button class="social-btn google ripple" id="googleLogin" aria-label="Sign in with Google">
                 <i class="fab fa-google" id="googleIcon"></i>
-                <i class="fas fa-spinner fa-spin" id="googleSpinner" style="display: none;"></i>
-            </div>
-            <div class="social-btn facebook" id="facebookLogin" aria-label="Sign in with Facebook">
+                <i class="fas fa-spinner spinner" id="googleSpinner" style="display: none;"></i>
+            </button>
+            <button class="social-btn facebook ripple" id="facebookLogin" aria-label="Sign in with Facebook">
                 <i class="fab fa-facebook-f" id="facebookIcon"></i>
-                <i class="fas fa-spinner fa-spin" id="facebookSpinner" style="display: none;"></i>
-            </div>
+                <i class="fas fa-spinner spinner" id="facebookSpinner" style="display: none;"></i>
+            </button>
         </div>
         
         <div class="links">
-            <a href="privacy-policy.html" id="privacyPolicy">Privacy Policy</a>
-            <a href="#" id="forgotPassword">Forgot password?</a>
-            <a href="register.html" id="registerLink">Create account</a>
+            <a href="forgot-password.html" class="link">
+                <i class="fas fa-key"></i> Forgot password?
+            </a>
+            <a href="register.html" class="link">
+                <i class="fas fa-user-plus"></i> Create account
+            </a>
+            <a href="privacy-policy.html" class="link">
+                <i class="fas fa-shield-alt"></i> Privacy Policy
+            </a>
         </div>
     </div>
 
@@ -383,6 +505,7 @@
         const analytics = firebase.analytics();
 
         // DOM Elements
+        const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const togglePassword = document.getElementById('togglePassword');
@@ -395,14 +518,11 @@
         const facebookLogin = document.getElementById('facebookLogin');
         const facebookIcon = document.getElementById('facebookIcon');
         const facebookSpinner = document.getElementById('facebookSpinner');
-        const forgotPassword = document.getElementById('forgotPassword');
-        const registerLink = document.getElementById('registerLink');
-        const privacyPolicy = document.getElementById('privacyPolicy');
+        const rememberMe = document.getElementById('rememberMe');
+        const passwordStrength = document.getElementById('passwordStrength');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
         const warningMessage = document.getElementById('warningMessage');
-        const rememberMe = document.getElementById('rememberMe');
-        const passwordStrength = document.getElementById('passwordStrength');
 
         // Session timeout variables
         let timeoutWarning;
@@ -439,7 +559,34 @@
             ['mousemove', 'keypress', 'click'].forEach(event => {
                 document.addEventListener(event, resetTimeout);
             });
+
+            // Add ripple effect to buttons
+            document.querySelectorAll('.ripple').forEach(button => {
+                button.addEventListener('click', createRipple);
+            });
         });
+
+        // Create ripple effect
+        function createRipple(e) {
+            const btn = e.currentTarget;
+            const circle = document.createElement('span');
+            const rect = btn.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            circle.style.width = circle.style.height = `${size}px`;
+            circle.style.left = `${x}px`;
+            circle.style.top = `${y}px`;
+            circle.classList.add('ripple-effect');
+            
+            const ripple = btn.getElementsByClassName('ripple-effect')[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            btn.appendChild(circle);
+        }
 
         // Toggle Password Visibility
         togglePassword.addEventListener('click', () => {
@@ -468,23 +615,24 @@
             if (/\d/.test(password)) strength++;
             if (/[^A-Za-z0-9]/.test(password)) strength++;
             
-            // Cap at 5
-            strength = Math.min(strength, 5);
-            
             // Update visual indicator
-            const width = strength * 20;
-            let color;
+            passwordStrength.className = 'strength-meter';
             
-            if (strength <= 1) color = '#ff5252'; // Red
-            else if (strength <= 3) color = '#ffb142'; // Orange
-            else color = '#33d9b2'; // Green
-            
-            passwordStrength.style.width = `${width}%`;
-            passwordStrength.style.backgroundColor = color;
+            if (password.length === 0) {
+                passwordStrength.style.width = '0';
+            } else if (strength <= 2) {
+                passwordStrength.classList.add('strength-weak');
+            } else if (strength <= 4) {
+                passwordStrength.classList.add('strength-medium');
+            } else {
+                passwordStrength.classList.add('strength-strong');
+            }
         }
 
         // Email/Password Login
-        loginBtn.addEventListener('click', async () => {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
             
@@ -510,15 +658,7 @@
                         : firebase.auth.Auth.Persistence.SESSION
                 );
                 
-                const userCredential = await auth.signInWithEmailAndPassword(email, password)
-                    .catch(error => {
-                        if (error.code === 'auth/multi-factor-auth-required') {
-                            // Handle MFA
-                            handleMFA(error.resolver);
-                        } else {
-                            throw error;
-                        }
-                    });
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 
                 logEvent('login_success', { method: 'email' });
                 showSuccess('Login successful! Redirecting...');
@@ -576,43 +716,6 @@
                 handleAuthError(error);
             } finally {
                 hideLoading(facebookLogin, facebookIcon, facebookSpinner);
-            }
-        });
-
-        // Forgot Password
-        forgotPassword.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const email = emailInput.value.trim();
-            
-            if (!validateEmail(email)) {
-                showError('Please enter a valid email address');
-                emailInput.focus();
-                return;
-            }
-
-            try {
-                showLoading(forgotPassword);
-                await auth.sendPasswordResetEmail(email);
-                logEvent('password_reset_request');
-                showSuccess(`Password reset link sent to ${email}. Check your inbox.`);
-            } catch (error) {
-                logEvent('password_reset_error', { error: error.code });
-                handleAuthError(error);
-            } finally {
-                hideLoading(forgotPassword);
-            }
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                if (document.activeElement === emailInput) {
-                    passwordInput.focus();
-                    e.preventDefault();
-                } else if (document.activeElement === passwordInput) {
-                    loginBtn.click();
-                    e.preventDefault();
-                }
             }
         });
 
@@ -735,13 +838,6 @@
             timeoutWarning = setTimeout(() => {
                 showWarning('Your session will expire soon due to inactivity.');
             }, TIMEOUT_DURATION - (5 * 60 * 1000)); // Warn 5 minutes before
-        }
-
-        function handleMFA(resolver) {
-            // This is a placeholder for MFA handling
-            // In a real implementation, you would prompt the user for their second factor
-            showError('Multi-factor authentication required. Please try another login method.');
-            console.log('MFA required', resolver);
         }
     </script>
 </body>

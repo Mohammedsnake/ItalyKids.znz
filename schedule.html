@@ -3,56 +3,442 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Schedule - Italy Kids</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>Match Schedule - Italy Kids FC</title>
+  <meta name="description" content="Upcoming match schedule for Italy Kids FC football team from Fuoni Melisaba, Zanzibar">
+  <style>
+    :root {
+      --primary: #0066CC;
+      --secondary: #009966;
+      --accent: #E32017;
+      --light: #F1FAEE;
+      --dark: #1D3557;
+      --text: #333333;
+      --background: #f9f9f9;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    nav a:hover, nav a:focus {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    #schedule {
+      padding: 1rem 0;
+    }
+    
+    #schedule h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+    
+    .schedule-controls {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .filter-options {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background-color: white;
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    #match-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    #match-table th {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.3s;
+    }
+    
+    #match-table th:hover {
+      background-color: var(--secondary);
+    }
+    
+    #match-table th::after {
+      content: "↓";
+      position: absolute;
+      right: 1rem;
+      opacity: 0.5;
+      transition: all 0.3s;
+    }
+    
+    #match-table th.asc::after {
+      content: "↑";
+      opacity: 1;
+    }
+    
+    #match-table th.desc::after {
+      content: "↓";
+      opacity: 1;
+    }
+    
+    #match-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    #match-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    #match-table tr:hover {
+      background-color: rgba(0,102,204,0.05);
+    }
+    
+    .match-home {
+      border-left: 4px solid var(--secondary);
+    }
+    
+    .match-away {
+      border-left: 4px solid var(--accent);
+    }
+    
+    .match-neutral {
+      border-left: 4px solid #FF9800;
+    }
+    
+    .match-past {
+      opacity: 0.7;
+    }
+    
+    .match-past td {
+      color: #777;
+    }
+    
+    .no-matches {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-size: 1.1rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: var(--dark);
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive table */
+    @media (max-width: 768px) {
+      #match-table {
+        display: block;
+        overflow-x: auto;
+      }
+      
+      .schedule-controls {
+        flex-direction: column;
+      }
+      
+      .filter-options {
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #match-table th, #match-table td {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .filter-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Match Schedule - Italy Kids</h1>
+    <h1>Italy Kids FC Match Schedule</h1>
     <nav>
       <a href="dashboard.html" aria-label="Go to Home page">Home</a>
       <a href="about.html" aria-label="Learn about Italy Kids">About</a>
       <a href="players.html" aria-label="View Players">Players</a>
       <a href="gallery.html" aria-label="Visit the Gallery">Gallery</a>
-      <a href="schedule.html" aria-label="Match Schedule">Schedule</a>
+      <a href="schedule.html" aria-label="Match Schedule" class="active">Schedule</a>
       <a href="coaches.html" aria-label="Meet the Coaches">Coaches</a>
       <a href="contact.html" aria-label="Get in Touch">Contact</a>
     </nav>
   </header>
+  
   <main>
     <section id="schedule">
-      <h2>Upcoming Matches</h2>
-      <table id="match-table" data-sort="asc">
+      <h2>Our Upcoming Fixtures</h2>
+      
+      <div class="schedule-controls">
+        <div class="filter-options">
+          <button class="filter-btn active" data-filter="all">All Matches</button>
+          <button class="filter-btn" data-filter="home">Home Games</button>
+          <button class="filter-btn" data-filter="away">Away Games</button>
+          <button class="filter-btn" data-filter="neutral">Neutral Venues</button>
+          <button class="filter-btn" data-filter="past">Past Matches</button>
+        </div>
+      </div>
+      
+      <table id="match-table">
         <thead>
           <tr>
             <th onclick="sortTable(0)">Date</th>
             <th onclick="sortTable(1)">Opponent</th>
             <th onclick="sortTable(2)">Location</th>
+            <th onclick="sortTable(3)">Competition</th>
+            <th onclick="sortTable(4)">Time</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!-- Upcoming Matches -->
+          <tr class="match-home">
             <td>2025-04-15</td>
             <td>Kisiki FC</td>
-            <td>Home</td>
+            <td>Home (Fuoni Melisaba)</td>
+            <td>Local Derby</td>
+            <td>16:00</td>
           </tr>
-          <tr>
+          <tr class="match-away">
             <td>2025-04-22</td>
             <td>LIS FC</td>
-            <td>Away</td>
+            <td>Away (Kikwajuni)</td>
+            <td>Zanzibar Youth League</td>
+            <td>15:30</td>
           </tr>
-          <tr>
+          <tr class="match-neutral">
             <td>2025-04-29</td>
             <td>Ngome Kids</td>
-            <td>Neutral</td>
+            <td>Neutral (Amani Stadium)</td>
+            <td>Friendly Match</td>
+            <td>18:00</td>
+          </tr>
+          <tr class="match-home">
+            <td>2025-05-06</td>
+            <td>Vini Combine</td>
+            <td>Home (Fuoni Melisaba)</td>
+            <td>Friendly Match</td>
+            <td>16:00</td>
+          </tr>
+          <tr class="match-neutral">
+            <td>2025-05-02</td>
+            <td>Survivors FC</td>
+            <td>Neutral (Amani Stadium)</td>
+            <td>Special Derby</td>
+            <td>16:00</td>
+          </tr>
+          
+          <!-- Past Matches -->
+          <tr class="match-away match-past">
+            <td>2025-03-30</td>
+            <td>LIS</td>
+            <td>Away (LIS Stadium)</td>
+            <td>Friendly</td>
+            <td>10:00</td>
+          </tr>
+          <tr class="match-home match-past">
+            <td>2024-07-22</td>
+            <td>Vini Combine</td>
+            <td>Home (Ngome Stadium)</td>
+            <td>Big Match</td>
+            <td>10:00</td>
+          </tr>
+          <tr class="match-neutral match-past">
+            <td>2024-07-15</td>
+            <td>Town Combine</td>
+            <td>Neutral (Amani Stadium)</td>
+            <td>Town Derby</td>
+            <td>19:00</td>
+          </tr>
+          <tr class="match-home">
+            <td>2024-07-29</td>
+            <td>Jumbi Squad</td>
+            <td>Michenzani Stadium</td>
+            <td>Sharo & Kapa's Cup</td>
+            <td>14:00</td>
           </tr>
         </tbody>
       </table>
     </section>
   </main>
+  
   <footer>
-    <p>© 2025 Italy Kids. Plan your game day with us!</p>
+    <p>© 2025 Italy Kids FC. Plan your game day with us!</p>
+    <p>Fuoni Melisaba, Zanzibar</p>
   </footer>
-  <script src="js/script.js"></script>
+
+  <script>
+    // Sort table functionality
+    function sortTable(columnIndex) {
+      const table = document.getElementById('match-table');
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+      const header = table.querySelectorAll('th')[columnIndex];
+      const isAsc = header.classList.contains('asc');
+      
+      // Clear all sort classes
+      table.querySelectorAll('th').forEach(th => {
+        th.classList.remove('asc', 'desc');
+      });
+      
+      // Sort rows
+      rows.sort((a, b) => {
+        const aValue = a.cells[columnIndex].textContent;
+        const bValue = b.cells[columnIndex].textContent;
+        
+        if (columnIndex === 0) { // Date column
+          return isAsc ? new Date(aValue) - new Date(bValue) : new Date(bValue) - new Date(aValue);
+        } else {
+          return isAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        }
+      });
+      
+      // Toggle sort direction
+      header.classList.add(isAsc ? 'desc' : 'asc');
+      
+      // Rebuild table
+      const tbody = table.querySelector('tbody');
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+    }
+    
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.dataset.filter;
+        const rows = document.querySelectorAll('#match-table tbody tr');
+        let hasVisibleRows = false;
+        
+        rows.forEach(row => {
+          const isPast = row.classList.contains('match-past');
+          const isHome = row.classList.contains('match-home');
+          const isAway = row.classList.contains('match-away');
+          const isNeutral = row.classList.contains('match-neutral');
+          
+          if (filter === 'all' || 
+              (filter === 'home' && isHome) ||
+              (filter === 'away' && isAway) ||
+              (filter === 'neutral' && isNeutral) ||
+              (filter === 'past' && isPast)) {
+            row.style.display = '';
+            hasVisibleRows = true;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        
+        // Show "no matches" message if needed
+        const noMatches = document.getElementById('no-matches');
+        if (!hasVisibleRows) {
+          if (!noMatches) {
+            const noMatchesDiv = document.createElement('div');
+            noMatchesDiv.id = 'no-matches';
+            noMatchesDiv.className = 'no-matches';
+            noMatchesDiv.textContent = 'No matches found for this filter';
+            document.getElementById('schedule').appendChild(noMatchesDiv);
+          }
+        } else if (noMatches) {
+          noMatches.remove();
+        }
+      });
+    });
+    
+    // Initialize the page with past matches hidden
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.match-past').forEach(row => {
+        row.style.display = 'none';
+      });
+    });
+  </script>
 </body>
 </html>

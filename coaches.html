@@ -3,70 +3,331 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coaches | Italy Kids</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>Meet Our Coaches - Italy Kids FC</title>
+  <meta name="description" content="Learn about the dedicated coaches who shaped Italy Kids FC football team from Fuoni Melisaba, Zanzibar">
+  <style>
+    :root {
+      --primary: #0066CC;
+      --secondary: #009966;
+      --accent: #E32017;
+      --light: #F1FAEE;
+      --dark: #1D3557;
+      --text: #333333;
+      --background: #f9f9f9;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    nav a:hover, nav a:focus {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    section {
+      padding: 1rem 0;
+    }
+    
+    section h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+    
+    section > p {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      color: #555;
+    }
+    
+    .coach-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 3rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .coach-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .coach-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 1rem;
+      background: linear-gradient(135deg, rgba(0,102,204,0.1), rgba(0,153,102,0.1));
+      text-align: center;
+    }
+    
+    .coach-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 1rem;
+    }
+    
+    .coach-card h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .coach-tenure {
+      color: var(--secondary);
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    
+    .coach-content {
+      padding: 1.5rem;
+    }
+    
+    .coach-content p {
+      margin-bottom: 1rem;
+      text-align: justify;
+    }
+    
+    .coach-content ul {
+      margin: 1rem 0 1rem 1.5rem;
+    }
+    
+    .coach-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .player-mentions {
+      background-color: rgba(0,102,204,0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+    
+    .player-mentions h4 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .player-mentions a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .player-mentions a:hover {
+      text-decoration: underline;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: var(--dark);
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (min-width: 768px) {
+      .coach-header {
+        flex-direction: row;
+        text-align: left;
+        padding: 2rem;
+      }
+      
+      .coach-img {
+        margin-right: 2rem;
+        margin-bottom: 0;
+      }
+      
+      .coach-info {
+        flex: 1;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .coach-img {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .coach-content {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Italy Kids Coaches</h1>
+    <h1>Italy Kids FC Coaching Staff</h1>
     <nav>
       <a href="dashboard.html">Home</a>
       <a href="about.html">About</a>
       <a href="players.html">Players</a>
       <a href="gallery.html">Gallery</a>
       <a href="schedule.html">Schedule</a>
-       <a href="coaches.html">Coaches</a>
+      <a href="coaches.html" class="active">Coaches</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
+  
   <main>
     <section>
-      <h2>Meet Our Coaches</h2>
+      <h2>Meet Our Legendary Coaches</h2>
       <p>Discover the stories of the dedicated individuals who shaped Italy Kids into the team it is today.</p>
+      
       <div class="coach-card">
-        <img src="https://example.com/images/john_doe.jpg" alt="Coach Sele Tege">
-        <h3>Coach Sele Tege</h3>
-        <p>
-          Sele Tege was the first coach to guide Italy Kids, transforming it from a loosely structured team into a well-organized unit. From 2015 to 2017, he brought order, love, and inspiration to the players, creating schedules for training sessions and providing jerseys for the team.
-        </p>
-        <p>
-          His leadership boosted player skills, experience, and even popularity, as the team took part in various competitions and away games under his direction. Sele Tege was known for his motivational approach, keen understanding of player positions, and unwavering dedication to his players.
-        </p>
-        <p>
-          During his era, <strong>MO Snake</strong> was appointed as the team captain due to his excellent behavior and performance. His favorite players, <a href="players.html#MO11">MO Snake</a> and <a href="players.html#KiduliJR">Kiduli JR</a>, often accompanied him to City Combines games beyond Italy street, showcasing their talents.
-        </p>
-        <p>
-          Sele Tege's legacy lives on as the foundation of Italy Kids' success. He remains a symbol of dedication, motivation, and the transformative power of effective leadership.
-        </p>
+        <div class="coach-header">
+          <img src="assets/coach-sele.jpg" alt="Coach Sele Tege" class="coach-img">
+          <div class="coach-info">
+            <h3>Coach Sele Tege</h3>
+            <div class="coach-tenure">2015-2017 | Founding Coach</div>
+            <p>"Transforming passion into structure"</p>
+          </div>
+        </div>
+        <div class="coach-content">
+          <p>Sele Tege was the first coach to guide Italy Kids, transforming it from a loosely structured team into a well-organized unit. From 2015 to 2017, he brought order, love, and inspiration to the players, creating schedules for training sessions and providing jerseys for the team.</p>
+          <p>His leadership boosted player skills, experience, and even popularity, as the team took part in various competitions and away games under his direction. Sele Tege was known for his motivational approach, keen understanding of player positions, and unwavering dedication to his players.</p>
+          
+          <div class="player-mentions">
+            <h4>Key Contributions:</h4>
+            <ul>
+              <li>Established the team's first formal structure and training regimen</li>
+              <li>Secured team jerseys and proper equipment</li>
+              <li>Developed players' technical and tactical understanding</li>
+              <li>Led the team to their first competitive tournaments</li>
+            </ul>
+          </div>
+          
+          <div class="player-mentions">
+            <h4>Notable Players:</h4>
+            <p>During his era, <strong>MO Snake</strong> was appointed as the team captain due to his excellent behavior and performance. His favorite players, <a href="players.html#MO11">MO Snake</a> and <a href="players.html#KiduliJR">Kiduli JR</a>, often accompanied him to City Combines games beyond Italy street, showcasing their talents.</p>
+          </div>
+          
+          <p>Sele Tege's legacy lives on as the foundation of Italy Kids' success. He remains a symbol of dedication, motivation, and the transformative power of effective leadership.</p>
+        </div>
       </div>
+      
       <div class="coach-card">
-        <img src="https://example.com/images/john_doe.jpg" alt="Coach Zakaria (ZR)">
-        <h3>Coach Zakaria (ZR)</h3>
-        <p>After the departure of Coach Sele Tege, the Italy Kids found themselves without formal leadership for several months. During this period, the team was guided by their captain, MO11. Thanks to the strong foundation laid earlier, the players continued to demonstrate their passion for football, with each member proudly donning their jerseys. MO11 organized practice sessions and matches, ensuring the team's spirit and form remained intact.</p>
-        <p>From 2018 to 2019, Coach Zakaria (known as ZR) stepped in to take charge, bringing a new era of success and inspiration to the Italy Kids. ZR, a former professional footballer with a wealth of experience, transformed the team's approach to training and gameplay. His strategic insights, coupled with his ability to motivate, elevated the team's performance to new heights. Under his leadership, every player not only honed their skills but also developed a deep love and commitment to the game. Training sessions became a priority, with players attending regularly, driven by ZR’s encouragement.</p>
-        <p><b>MO11,</b> admired for his exceptional skills and exemplary behavior, continued as the team captain during ZR's tenure. However, the team's growing enthusiasm for football occasionally led to clashes, as players juggled their academic responsibilities and rigorous training schedules. ZR worked tirelessly to strike a balance, emphasizing the importance of both education and football. His dedication ensured that no player neglected their studies while pursuing their passion for the sport.</p>
-        <p><strong>Coach ZR's legacy is marked by several remarkable achievements, including:</strong></p>
-        <!-- Replace with specific achievements -->
-         <ul>
-          <li>Street Titles</li>
-          <li> Individual Players development milestones</li>
-          <li>Discipline to Players</li>
-          <li>Players' Hygiene</li>
-          <li>Strong Relation among Players</li>
-        </ul>
+        <div class="coach-header">
+          <img src="assets/coachzr.jpg" alt="Coach Zakaria (ZR)" class="coach-img">
+          <div class="coach-info">
+            <h3>Coach Zakaria (ZR)</h3>
+            <div class="coach-tenure">2018-2019 | Professional Development Era</div>
+            <p>"Elevating skills and passion for the game"</p>
+          </div>
+        </div>
+        <div class="coach-content">
+          <p>After the departure of Coach Sele Tege, the Italy Kids found themselves without formal leadership for several months. During this period, the team was guided by their captain, MO11. Thanks to the strong foundation laid earlier, the players continued to demonstrate their passion for football, with each member proudly donning their jerseys.</p>
+          <p>From 2018 to 2019, Coach Zakaria (known as ZR) stepped in to take charge, bringing a new era of success and inspiration to the Italy Kids. ZR, a former professional footballer with a wealth of experience, transformed the team's approach to training and gameplay.</p>
+          <p>His strategic insights, coupled with his ability to motivate, elevated the team's performance to new heights. Under his leadership, every player not only honed their skills but also developed a deep love and commitment to the game. Training sessions became a priority, with players attending regularly, driven by ZR's encouragement.</p>
+          
+          <div class="player-mentions">
+            <h4>Key Achievements:</h4>
+            <ul>
+              <li>Multiple street tournament victories</li>
+              <li>Significant individual player development milestones</li>
+              <li>Established team discipline standards</li>
+              <li>Improved players' hygiene and professionalism</li>
+              <li>Strengthened relationships among players</li>
+            </ul>
+          </div>
+          
+          <p><b>MO11,</b> admired for his exceptional skills and exemplary behavior, continued as the team captain during ZR's tenure. However, the team's growing enthusiasm for football occasionally led to clashes, as players juggled their academic responsibilities and rigorous training schedules.</p>
+          <p>ZR worked tirelessly to strike a balance, emphasizing the importance of both education and football. His dedication ensured that no player neglected their studies while pursuing their passion for the sport.</p>
+        </div>
       </div>
+      
       <div class="coach-card">
-        <img src="https://example.com/images/jane_smith.jpg" alt="Coach Mpini">
-        <h3>Coach Mpini</h3>
-        <p>After the impactful tenure of Coach ZR, Coach Mpini stepped in to guide the Italy Kids from 2010 to 2018. As a seasoned individual with a family of his own, Mpini brought a nurturing and caring approach to his leadership. His wisdom and experience, coupled with his ability to understand the players' needs, made him a valuable mentor to the team. Despite his busy schedule and family responsibilities, Mpini dedicated his free time to the Italy Kids, ensuring the team maintained its passion for football.</p>
-        <p>Due to his limited availability, the team was often under the supervision of captains, who handled day-to-day activities and organized matches when Mpini was unavailable. His trust in the captains to lead during his absence fostered a sense of responsibility and teamwork among the players. Under his era, the Italy Kids made a significant transition, moving their home pitch to a smaller field. While the new pitch presented challenges, it also brought opportunities for the players to adapt their strategies and improve their skills in tighter spaces.</p>
-        <p>Coach Mpini's era was marked by a balance between discipline and encouragement, enabling the players to thrive both individually and as a team. He instilled values of perseverance and collaboration, which remained ingrained in the team's culture long after his tenure. The Italy Kids continued to grow, both in form and unity, under Mpini's leadership. Although his time with the team was divided, his presence left a lasting impact, setting the stage for further success in the years to come.</p>
-        <p>Coach Mpini's legacy is a testament to the power of dedication and adaptability, proving that even with challenges, a leader can make a profound difference in the lives of those they guide.</p>
+        <div class="coach-header">
+          <img src="assets/mpini.jpg" alt="Coach Mpini" class="coach-img">
+          <div class="coach-info">
+            <h3>Coach Mpini</h3>
+            <div class="coach-tenure">2010-2018 | The Nurturing Era</div>
+            <p>"Balancing football with life's responsibilities"</p>
+          </div>
+        </div>
+        <div class="coach-content">
+          <p>After the impactful tenure of Coach ZR, Coach Mpini stepped in to guide the Italy Kids from 2010 to 2018. As a seasoned individual with a family of his own, Mpini brought a nurturing and caring approach to his leadership. His wisdom and experience, coupled with his ability to understand the players' needs, made him a valuable mentor to the team.</p>
+          <p>Despite his busy schedule and family responsibilities, Mpini dedicated his free time to the Italy Kids, ensuring the team maintained its passion for football. Due to his limited availability, the team was often under the supervision of captains, who handled day-to-day activities and organized matches when Mpini was unavailable.</p>
+          
+          <div class="player-mentions">
+            <h4>Team Transition:</h4>
+            <p>Under his era, the Italy Kids made a significant transition, moving their home pitch to a smaller field. While the new pitch presented challenges, it also brought opportunities for the players to adapt their strategies and improve their skills in tighter spaces.</p>
+          </div>
+          
+          <p>Coach Mpini's era was marked by a balance between discipline and encouragement, enabling the players to thrive both individually and as a team. He instilled values of perseverance and collaboration, which remained ingrained in the team's culture long after his tenure.</p>
+          <p>The Italy Kids continued to grow, both in form and unity, under Mpini's leadership. Although his time with the team was divided, his presence left a lasting impact, setting the stage for further success in the years to come.</p>
+          <p>Coach Mpini's legacy is a testament to the power of dedication and adaptability, proving that even with challenges, a leader can make a profound difference in the lives of those they guide.</p>
+        </div>
       </div>
     </section>
   </main>
+  
   <footer>
-    <p>© 2025 Italy Kids. All rights reserved.</p>
+    <p>© 2025 Italy Kids FC. All rights reserved.</p>
+    <p>Fuoni Melisaba, Zanzibar</p>
   </footer>
 </body>
 </html>
