@@ -72,11 +72,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .logo-container:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-        .logo-image{
+        .logo-container {
             width: 100px;
             height: 100px;
             margin: 0 auto 1.5rem;
@@ -88,6 +84,18 @@
             box-shadow: var(--shadow-md);
             border: 3px solid white;
             transition: var(--transition);
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         h1 {
@@ -205,6 +213,7 @@
             cursor: pointer;
             transition: var(--transition);
             box-shadow: var(--shadow-sm);
+            border: none;
         }
 
         .social-btn:hover {
@@ -282,6 +291,8 @@
             color: var(--dark);
             transition: var(--transition);
             padding: 8px;
+            background: none;
+            border: none;
         }
 
         .toggle-password:hover {
@@ -416,6 +427,7 @@
                 opacity: 0;
             }
         }
+
     </style>
 </head>
 <body>
@@ -524,21 +536,13 @@
         const successMessage = document.getElementById('successMessage');
         const warningMessage = document.getElementById('warningMessage');
 
-        // Session timeout variables
-        let timeoutWarning;
-        const TIMEOUT_DURATION = 30 * 60 * 1000; // 30 minutes
-        let recaptchaVerifier;
+        // Mobile detection
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
-            // Set up recaptcha
-            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('loginBtn', {
-                size: 'invisible',
-                callback: () => {
-                    // reCAPTCHA solved, proceed with login
-                }
-            });
-
             // Auto-focus email field
             emailInput.focus();
 
@@ -549,21 +553,15 @@
                 }
             });
 
-            // Initialize button original text
-            document.querySelectorAll('button').forEach(button => {
-                button.dataset.originalText = button.innerHTML;
-            });
-
-            // Set up session timeout
-            resetTimeout();
-            ['mousemove', 'keypress', 'click'].forEach(event => {
-                document.addEventListener(event, resetTimeout);
-            });
-
             // Add ripple effect to buttons
             document.querySelectorAll('.ripple').forEach(button => {
                 button.addEventListener('click', createRipple);
             });
+
+            // Check if returning from Google redirect
+            if (window.location.hash.includes('google-redirect')) {
+                handleGoogleRedirectResult();
+            }
         });
 
         // Create ripple effect
@@ -674,27 +672,47 @@
             }
         });
 
-        // Google Login
+        // Google Login - Improved for mobile
         googleLogin.addEventListener('click', async () => {
             try {
                 showLoading(googleLogin, googleIcon, googleSpinner);
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
                 
-                const result = await auth.signInWithPopup(provider);
-                logEvent('login_success', { method: 'google' });
-                showSuccess('Google login successful!');
-                redirectToDashboard();
+                if (isMobileDevice()) {
+                    // Use redirect flow for mobile devices
+                    window.location.hash = 'google-redirect';
+                    await auth.signInWithRedirect(provider);
+                } else {
+                    // Use popup flow for desktop
+                    const result = await auth.signInWithPopup(provider);
+                    handleLoginSuccess(result, 'google');
+                }
             } catch (error) {
-                logEvent('login_error', { 
-                    method: 'google', 
-                    error: error.code 
-                });
+                handleAuthError(error);
+            } finally {
+                if (!isMobileDevice()) {
+                    hideLoading(googleLogin, googleIcon, googleSpinner);
+                }
+            }
+        });
+
+        // Handle Google redirect result
+        async function handleGoogleRedirectResult() {
+            try {
+                showLoading(googleLogin, googleIcon, googleSpinner);
+                const result = await auth.getRedirectResult();
+                if (result.user) {
+                    handleLoginSuccess(result, 'google');
+                }
+            } catch (error) {
                 handleAuthError(error);
             } finally {
                 hideLoading(googleLogin, googleIcon, googleSpinner);
+                // Clear the hash
+                history.replaceState(null, null, ' ');
             }
-        });
+        }
 
         // Facebook Login
         facebookLogin.addEventListener('click', async () => {
@@ -705,19 +723,20 @@
                 provider.addScope('public_profile');
                 
                 const result = await auth.signInWithPopup(provider);
-                logEvent('login_success', { method: 'facebook' });
-                showSuccess('Facebook login successful!');
-                redirectToDashboard();
+                handleLoginSuccess(result, 'facebook');
             } catch (error) {
-                logEvent('login_error', { 
-                    method: 'facebook', 
-                    error: error.code 
-                });
                 handleAuthError(error);
             } finally {
                 hideLoading(facebookLogin, facebookIcon, facebookSpinner);
             }
         });
+
+        // Handle successful login
+        function handleLoginSuccess(result, method) {
+            logEvent('login_success', { method: method });
+            showSuccess(`${method.charAt(0).toUpperCase() + method.slice(1)} login successful!`);
+            redirectToDashboard();
+        }
 
         // Utility Functions
         function validateEmail(email) {
@@ -741,7 +760,7 @@
                 textElement.style.display = 'block';
                 spinnerElement.style.display = 'none';
             } else {
-                button.innerHTML = button.dataset.originalText;
+                button.innerHTML = button.textContent;
             }
         }
 
@@ -756,7 +775,9 @@
                 'auth/email-already-in-use': 'This email is already registered. Try logging in instead.',
                 'auth/operation-not-allowed': 'This login method is currently unavailable.',
                 'auth/weak-password': 'Your password should be at least 6 characters long.',
-                'auth/popup-closed-by-user': 'The login window was closed before completing the process.',
+                'auth/popup-closed-by-user': isMobileDevice() 
+                    ? 'Please allow popups or try the redirect method for Google sign-in on mobile' 
+                    : 'The login window was closed before completing the process.',
                 'auth/account-exists-with-different-credential': 'This email is already registered with a different login method.',
                 'auth/requires-recent-login': 'For security reasons, please log in again to perform this action.',
                 'auth/network-request-failed': 'Network error. Please check your internet connection and try again.',
@@ -766,7 +787,9 @@
                 'auth/invalid-verification-id': 'The verification process failed. Please try again.',
                 'auth/missing-verification-code': 'Verification code is required.',
                 'auth/missing-verification-id': 'Verification process failed to start.',
-                'auth/quota-exceeded': 'Service quota exceeded. Please try again later.'
+                'auth/quota-exceeded': 'Service quota exceeded. Please try again later.',
+                'auth/redirect-cancelled-by-user': 'Sign-in was cancelled',
+                'auth/redirect-operation-pending': 'Another sign-in operation is already in progress'
             };
 
             const defaultMessage = 'An unexpected error occurred. Please try again.';
@@ -831,13 +854,6 @@
                 analytics.logEvent(eventName, params);
             }
             console.log(`Event: ${eventName}`, params);
-        }
-
-        function resetTimeout() {
-            clearTimeout(timeoutWarning);
-            timeoutWarning = setTimeout(() => {
-                showWarning('Your session will expire soon due to inactivity.');
-            }, TIMEOUT_DURATION - (5 * 60 * 1000)); // Warn 5 minutes before
         }
     </script>
 </body>
