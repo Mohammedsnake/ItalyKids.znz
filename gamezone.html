@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Italy Kids - Game Zone</title>
+    <title>Italy Kids - Live Football Streaming</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <!-- Video.js for streaming -->
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
+    <!-- HLS.js for adaptive streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --italy-blue: #0066CC;
@@ -70,57 +74,141 @@
             font-size: 1.5rem;
         }
 
-        .gamezone-container {
+        .main-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 2rem;
         }
 
-        .game-header {
+        .match-header {
             text-align: center;
             margin-bottom: 2rem;
         }
 
-        .game-header h1 {
+        .match-header h1 {
             font-size: 2.5rem;
             color: var(--italy-blue);
             margin-bottom: 0.5rem;
         }
 
-        .live-match {
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
             background: white;
             border-radius: 10px;
-            padding: 2rem;
             box-shadow: var(--shadow);
-            text-align: center;
-            margin-bottom: 2rem;
         }
 
-        .live-match h2 {
+        .teams {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .vs {
+            font-size: 1.5rem;
+            font-weight: bold;
             color: var(--italy-red);
-            margin-bottom: 1rem;
         }
 
-        .viewers {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+        .match-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .viewers span {
+        .match-time {
             font-weight: bold;
             color: var(--italy-green);
+            font-size: 1.2rem;
+        }
+
+        .match-competition {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .match-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .stream-container {
+            width: 100%;
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        .video-js {
+            width: 100%;
+            height: 500px;
+        }
+
+        .stream-placeholder {
+            width: 100%;
+            height: 500px;
+            background: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .stream-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
         }
 
         .btn {
             background: var(--italy-blue);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
-            margin: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn:hover {
@@ -135,115 +223,35 @@
             background: var(--italy-green);
         }
 
-        .game-section {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
+        .btn-gray {
+            background: #666;
         }
 
-        .game-section h2 {
-            color: var(--italy-blue);
-            margin-bottom: 1rem;
+        .broadcaster-options {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .game-section .score {
-            font-weight: bold;
-            color: var(--italy-green);
-        }
-
-        /* Memory Game Styles */
-        .memory-game {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            flex-wrap: wrap;
             gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .memory-game {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .memory-card {
-            aspect-ratio: 1;
-            background: var(--italy-blue);
-            border-radius: 5px;
-            display: flex;
             justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
-            position: relative;
+            margin: 1rem 0;
         }
 
-        .memory-card.flipped {
-            transform: rotateY(180deg);
-            background: var(--italy-green);
-        }
-
-        .memory-card.matched {
-            background: var(--italy-red);
-            cursor: default;
-        }
-
-        /* Trivia Game Styles */
-        .trivia-question {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .trivia-options {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .trivia-option {
-            padding: 0.8rem;
-            background: #f0f0f0;
+        .broadcaster-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .trivia-option:hover {
-            background: #e0e0e0;
+        .broadcaster-btn:hover {
+            background: #f0f0f0;
         }
 
-        .trivia-option.correct {
-            background: var(--italy-green);
+        .broadcaster-btn.active {
+            background: var(--italy-blue);
             color: white;
-        }
-
-        .trivia-option.incorrect {
-            background: var(--italy-red);
-            color: white;
-        }
-
-        .game-result {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin: 1rem 0;
-            color: var(--italy-blue);
-        }
-
-        footer {
-            background: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: 2rem;
+            border-color: var(--italy-blue);
         }
 
         .user-info {
@@ -266,14 +274,36 @@
             font-weight: bold;
         }
 
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 gap: 1rem;
                 font-size: 0.9rem;
             }
             
-            .memory-game {
-                grid-template-columns: repeat(2, 1fr);
+            .match-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .teams {
+                gap: 1rem;
+            }
+            
+            .video-js, .stream-placeholder {
+                height: 300px;
+            }
+            
+            .stream-controls, .broadcaster-options {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -295,61 +325,110 @@
         </nav>
     </header>
 
-    <main class="gamezone-container">
+    <main class="main-container">
         <div class="user-info" id="userInfo">
             <div class="user-avatar" id="userAvatar"></div>
             <span id="userName"></span>
             <button class="btn btn-red" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
         </div>
 
-        <div class="game-header">
-            <h1><i class="fas fa-gamepad"></i> Game Zone</h1>
-            <p>Play and compete with your team!</p>
+        <div class="match-header">
+            <h1><i class="fas fa-futbol"></i> Live Football</h1>
+            <p>Watch top matches live with Italy Kids</p>
         </div>
 
-        <div class="live-match">
-            <h2><i class="fas fa-tv"></i> Live Match</h2>
-            <div class="viewers">Viewers: <span id="viewerCount">0</span></div>
-            <button class="btn" id="shareBtn">
-                <i class="fas fa-share-alt"></i> Share
-            </button>
-        </div>
-
-        <!-- Memory Match Game -->
-        <div class="game-section">
-            <h2>
-                <span><i class="fas fa-brain"></i> Memory Match</span>
-                <span>Score: <span class="score" id="memoryScore">0</span></span>
-            </h2>
-            <div class="memory-game" id="memoryGame"></div>
-            <div style="text-align: center;">
-                <button class="btn btn-green" id="startMemoryGame">Start Game</button>
-                <button class="btn btn-red" id="resetMemoryGame">Reset</button>
+        <!-- Match Information -->
+        <div class="match-info">
+            <div class="teams">
+                <div class="team">
+                    <img src="https://via.placeholder.com/60x60?text=MC" alt="Manchester City" class="team-logo" id="homeTeamLogo">
+                    <span id="homeTeamName">Manchester City</span>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team">
+                    <img src="https://via.placeholder.com/60x60?text=FCB" alt="Barcelona" class="team-logo" id="awayTeamLogo">
+                    <span id="awayTeamName">Barcelona</span>
+                </div>
+            </div>
+            <div class="match-details">
+                <div class="match-time" id="matchTime">LIVE 35'</div>
+                <div class="match-competition" id="matchCompetition">UEFA Champions League</div>
+            </div>
+            <div class="match-stats">
+                <div class="stat">
+                    <div class="stat-value" id="viewerCount">0</div>
+                    <div class="stat-label">Viewers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="matchScore">1 - 0</div>
+                    <div class="stat-label">Score</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="matchMinute">35'</div>
+                    <div class="stat-label">Minute</div>
+                </div>
             </div>
         </div>
 
-        <!-- Trivia Game -->
-        <div class="game-section">
-            <h2>
-                <span><i class="fas fa-question-circle"></i> Italy Kids Trivia</span>
-                <span>Score: <span class="score" id="triviaScore">0</span></span>
-            </h2>
-            <div id="triviaGame">
-                <div class="trivia-question" id="triviaQuestion">Ready to test your knowledge?</div>
-                <div class="trivia-options" id="triviaOptions"></div>
-                <div class="game-result" id="triviaResult"></div>
-                <div style="text-align: center;">
-                    <button class="btn btn-green" id="startTriviaGame">Start Trivia</button>
-                    <button class="btn btn-red" id="nextTriviaQuestion" style="display: none;">Next Question</button>
+        <!-- Stream Container -->
+        <div class="stream-container">
+            <div id="streamPlaceholder" class="stream-placeholder">
+                <div>
+                    <p>Select a broadcaster to start watching</p>
+                    <p><i class="fas fa-circle-notch fa-spin"></i> Loading available streams...</p>
                 </div>
+            </div>
+            <video id="liveStreamPlayer" class="video-js vjs-default-skin" style="display:none;" controls preload="auto">
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
+            </video>
+        </div>
+
+        <!-- Broadcaster Selection -->
+        <div class="broadcaster-options" id="broadcasterOptions">
+            <!-- Options will be populated by JavaScript -->
+        </div>
+
+        <!-- Stream Controls -->
+        <div class="stream-controls">
+            <button class="btn" id="shareBtn">
+                <i class="fas fa-share-alt"></i> Share Stream
+            </button>
+            <button class="btn btn-green" id="refreshStreamBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Stream
+            </button>
+            <button class="btn btn-gray" id="qualityBtn" style="display:none;">
+                <i class="fas fa-tachometer-alt"></i> Quality
+            </button>
+        </div>
+
+        <!-- Match Commentary -->
+        <div class="match-commentary" style="background:white; border-radius:10px; padding:1rem; margin:1rem 0; box-shadow:var(--shadow);">
+            <h3><i class="fas fa-comment-alt"></i> Live Commentary</h3>
+            <div id="liveCommentary" style="max-height:300px; overflow-y:auto; padding:0.5rem;">
+                <p>Loading live commentary...</p>
+            </div>
+        </div>
+
+        <!-- Match Statistics -->
+        <div class="match-stats-container" style="background:white; border-radius:10px; padding:1rem; margin:1rem 0; box-shadow:var(--shadow);">
+            <h3><i class="fas fa-chart-bar"></i> Match Statistics</h3>
+            <div id="matchStatistics" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-top:1rem;">
+                <!-- Stats will be populated by JavaScript -->
             </div>
         </div>
     </main>
 
     <footer>
         <p>© 2025 Italy Kids. All rights reserved.</p>
+        <p><small>All streams are provided by official broadcast partners</small></p>
     </footer>
 
+    <!-- Video.js Script -->
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    
     <script>
         // Firebase Configuration
         const firebaseConfig = {
@@ -376,62 +455,28 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const viewerCount = document.getElementById('viewerCount');
         const shareBtn = document.getElementById('shareBtn');
-        const memoryGame = document.getElementById('memoryGame');
-        const memoryScore = document.getElementById('memoryScore');
-        const startMemoryGame = document.getElementById('startMemoryGame');
-        const resetMemoryGame = document.getElementById('resetMemoryGame');
-        const triviaQuestion = document.getElementById('triviaQuestion');
-        const triviaOptions = document.getElementById('triviaOptions');
-        const triviaScore = document.getElementById('triviaScore');
-        const triviaResult = document.getElementById('triviaResult');
-        const startTriviaGame = document.getElementById('startTriviaGame');
-        const nextTriviaQuestion = document.getElementById('nextTriviaQuestion');
+        const refreshStreamBtn = document.getElementById('refreshStreamBtn');
+        const qualityBtn = document.getElementById('qualityBtn');
+        const streamPlaceholder = document.getElementById('streamPlaceholder');
+        const liveStreamPlayer = document.getElementById('liveStreamPlayer');
+        const broadcasterOptions = document.getElementById('broadcasterOptions');
+        const liveCommentary = document.getElementById('liveCommentary');
+        const matchStatistics = document.getElementById('matchStatistics');
+        const homeTeamName = document.getElementById('homeTeamName');
+        const awayTeamName = document.getElementById('awayTeamName');
+        const homeTeamLogo = document.getElementById('homeTeamLogo');
+        const awayTeamLogo = document.getElementById('awayTeamLogo');
+        const matchTime = document.getElementById('matchTime');
+        const matchCompetition = document.getElementById('matchCompetition');
+        const matchScore = document.getElementById('matchScore');
+        const matchMinute = document.getElementById('matchMinute');
 
-        // Game Variables
-        let memoryCards = [];
-        let hasFlippedCard = false;
-        let lockBoard = false;
-        let firstCard, secondCard;
-        let memoryMatches = 0;
-        let triviaCurrentQuestion = 0;
-        let triviaCorrectAnswers = 0;
-        let triviaQuestions = [];
-        let userData = null;
+        // Video Player Instance
+        let player;
 
-        // Trivia Questions
-        const triviaData = [
-            {
-                question: "What year was the Italy Kids team founded?",
-                options: ["2010", "2015", "2018", "2020"],
-                answer: 1
-            },
-            {
-                question: "Who is the current coach of Italy Kids?",
-                options: ["Marco Rossi", "Giovanni Bianchi", "Luca Verdi", "Alessandro Neri"],
-                answer: 0
-            },
-            {
-                question: "How many championships has Italy Kids won?",
-                options: ["2", "5", "7", "10"],
-                answer: 2
-            },
-            {
-                question: "What is the team's primary color?",
-                options: ["Red", "Blue", "Green", "White"],
-                answer: 1
-            },
-            {
-                question: "Where does Italy Kids typically practice?",
-                options: ["Rome", "Milan", "Turin", "Naples"],
-                answer: 0
-            }
-        ];
-
-        // Memory Game Icons (Font Awesome)
-        const memoryIcons = [
-            'futbol', 'trophy', 'tshirt', 'whistle',
-            'medal', 'flag', 'running', 'stopwatch'
-        ];
+        // Current Stream Configuration
+        let currentStream = null;
+        let hlsInstance = null;
 
         // Check auth state
         auth.onAuthStateChanged((user) => {
@@ -448,19 +493,10 @@
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
                 userAvatar.style.backgroundColor = randomColor;
                 
-                // Save user data
-                userData = {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: displayName
-                };
-                
-                // Initialize games
-                initMemoryGame();
-                initTriviaGame();
-                
-                // Initialize real-time viewer count
+                // Initialize real-time features
                 initViewerCount();
+                loadMatchData();
+                initStreaming();
             }
         });
 
@@ -479,20 +515,27 @@
         shareBtn.addEventListener('click', () => {
             if (navigator.share) {
                 navigator.share({
-                    title: 'Italy Kids Game Zone',
-                    text: 'Check out the live match on Italy Kids!',
+                    title: 'Watch ' + homeTeamName.textContent + ' vs ' + awayTeamName.textContent,
+                    text: 'Watch the live match on Italy Kids!',
                     url: window.location.href
                 }).catch(err => {
                     console.log('Error sharing:', err);
                 });
             } else {
-                alert('Web Share API not supported. Copy this link: ' + window.location.href);
+                alert('Share this link: ' + window.location.href);
+            }
+        });
+
+        // Refresh Stream Button
+        refreshStreamBtn.addEventListener('click', () => {
+            if (currentStream) {
+                loadStream(currentStream);
             }
         });
 
         // Initialize real-time viewer count
         function initViewerCount() {
-            const viewerRef = database.ref('gamezone/viewers');
+            const viewerRef = database.ref('stream/viewers');
             
             // Get current viewer count
             viewerRef.on('value', (snapshot) => {
@@ -513,207 +556,271 @@
             });
         }
 
-        // Memory Game Functions
-        function initMemoryGame() {
-            startMemoryGame.addEventListener('click', startMemoryGameHandler);
-            resetMemoryGame.addEventListener('click', resetMemoryGameHandler);
-        }
-
-        function startMemoryGameHandler() {
-            memoryMatches = 0;
-            memoryScore.textContent = '0';
-            createMemoryBoard();
-            startMemoryGame.style.display = 'none';
-            resetMemoryGame.style.display = 'inline-block';
-        }
-
-        function resetMemoryGameHandler() {
-            memoryGame.innerHTML = '';
-            memoryMatches = 0;
-            memoryScore.textContent = '0';
-            startMemoryGame.style.display = 'inline-block';
-            resetMemoryGame.style.display = 'none';
-        }
-
-        function createMemoryBoard() {
-            memoryCards = [];
-            memoryGame.innerHTML = '';
-            
-            // Create pairs of cards
-            const gameIcons = [...memoryIcons, ...memoryIcons];
-            gameIcons.sort(() => 0.5 - Math.random());
-            
-            gameIcons.forEach((icon, index) => {
-                const card = document.createElement('div');
-                card.classList.add('memory-card');
-                card.dataset.icon = icon;
-                card.dataset.index = index;
-                card.innerHTML = `<i class="fas fa-${icon}"></i>`;
-                card.addEventListener('click', flipCard);
-                memoryGame.appendChild(card);
-                memoryCards.push(card);
-            });
-        }
-
-        function flipCard() {
-            if (lockBoard) return;
-            if (this === firstCard) return;
-            if (this.classList.contains('matched')) return;
-            
-            this.classList.add('flipped');
-            
-            if (!hasFlippedCard) {
-                // First click
-                hasFlippedCard = true;
-                firstCard = this;
-                return;
-            }
-            
-            // Second click
-            secondCard = this;
-            checkForMatch();
-        }
-
-        function checkForMatch() {
-            const isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
-            
-            if (isMatch) {
-                disableCards();
-                memoryMatches++;
-                memoryScore.textContent = memoryMatches;
-                updateScore('memory', memoryMatches);
+        // Load match data from API
+        async function loadMatchData() {
+            try {
+                // In a real implementation, you would call your backend API
+                // which would then call the sports API with proper authentication
+                // For demo purposes, we're using mock data
                 
-                // Check if game is complete
-                if (memoryMatches === memoryIcons.length) {
-                    setTimeout(() => {
-                        alert(`Congratulations! You matched all ${memoryIcons.length} pairs!`);
-                    }, 500);
-                }
-            } else {
-                unflipCards();
-            }
-        }
+                const mockMatchData = {
+                    homeTeam: {
+                        name: "Manchester City",
+                        logo: "https://via.placeholder.com/60x60?text=MC",
+                        score: 1
+                    },
+                    awayTeam: {
+                        name: "Barcelona",
+                        logo: "https://via.placeholder.com/60x60?text=FCB",
+                        score: 0
+                    },
+                    competition: "UEFA Champions League",
+                    minute: 35,
+                    status: "LIVE",
+                    broadcasters: [
+                        { id: "dazn", name: "DAZN", logo: "dazn-logo.png", available: true },
+                        { id: "espn", name: "ESPN", logo: "espn-logo.png", available: true },
+                        { id: "bein", name: "beIN Sports", logo: "bein-logo.png", available: false }
+                    ],
+                    commentary: [
+                        { minute: 35, text: "Great save by the Barcelona goalkeeper!" },
+                        { minute: 32, text: "Manchester City scores! What a goal!" },
+                        { minute: 28, text: "Corner kick for Barcelona" },
+                        { minute: 25, text: "Yellow card shown to Manchester City defender" }
+                    ],
+                    stats: {
+                        possession: { home: 58, away: 42 },
+                        shots: { home: 12, away: 5 },
+                        shotsOnTarget: { home: 4, away: 2 },
+                        corners: { home: 5, away: 3 },
+                        fouls: { home: 8, away: 10 }
+                    }
+                };
 
-        function disableCards() {
-            firstCard.classList.add('matched');
-            secondCard.classList.add('matched');
-            
-            resetBoard();
-        }
+                // Update match info
+                homeTeamName.textContent = mockMatchData.homeTeam.name;
+                awayTeamName.textContent = mockMatchData.awayTeam.name;
+                homeTeamLogo.src = mockMatchData.homeTeam.logo;
+                awayTeamLogo.src = mockMatchData.awayTeam.logo;
+                matchCompetition.textContent = mockMatchData.competition;
+                matchScore.textContent = `${mockMatchData.homeTeam.score} - ${mockMatchData.awayTeam.score}`;
+                matchMinute.textContent = `${mockMatchData.minute}'`;
+                matchTime.textContent = `${mockMatchData.status} ${mockMatchData.minute}'`;
 
-        function unflipCards() {
-            lockBoard = true;
-            
-            setTimeout(() => {
-                firstCard.classList.remove('flipped');
-                secondCard.classList.remove('flipped');
-                
-                resetBoard();
-            }, 1000);
-        }
+                // Update commentary
+                liveCommentary.innerHTML = '';
+                mockMatchData.commentary.forEach(event => {
+                    const comment = document.createElement('p');
+                    comment.innerHTML = `<strong>${event.minute}'</strong> ${event.text}`;
+                    liveCommentary.appendChild(comment);
+                });
 
-        function resetBoard() {
-            [hasFlippedCard, lockBoard] = [false, false];
-            [firstCard, secondCard] = [null, null];
-        }
+                // Update statistics
+                matchStatistics.innerHTML = `
+                    <div class="stat-item">
+                        <div class="stat-bar-container">
+                            <div class="stat-bar-label">Possession</div>
+                            <div class="stat-bar">
+                                <div class="stat-bar-home" style="width:${mockMatchData.stats.possession.home}%">
+                                    ${mockMatchData.stats.possession.home}%
+                                </div>
+                                <div class="stat-bar-away" style="width:${mockMatchData.stats.possession.away}%">
+                                    ${mockMatchData.stats.possession.away}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div>Shots: ${mockMatchData.stats.shots.home} - ${mockMatchData.stats.shots.away}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div>Shots on Target: ${mockMatchData.stats.shotsOnTarget.home} - ${mockMatchData.stats.shotsOnTarget.away}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div>Corners: ${mockMatchData.stats.corners.home} - ${mockMatchData.stats.corners.away}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div>Fouls: ${mockMatchData.stats.fouls.home} - ${mockMatchData.stats.fouls.away}</div>
+                    </div>
+                `;
 
-        // Trivia Game Functions
-        function initTriviaGame() {
-            startTriviaGame.addEventListener('click', startTriviaGameHandler);
-            nextTriviaQuestion.addEventListener('click', nextTriviaQuestionHandler);
-            
-            // Shuffle questions
-            triviaQuestions = [...triviaData].sort(() => 0.5 - Math.random());
-        }
-
-        function startTriviaGameHandler() {
-            triviaCurrentQuestion = 0;
-            triviaCorrectAnswers = 0;
-            triviaScore.textContent = '0';
-            triviaResult.textContent = '';
-            startTriviaGame.style.display = 'none';
-            nextTriviaQuestion.style.display = 'inline-block';
-            showTriviaQuestion();
-        }
-
-        function nextTriviaQuestionHandler() {
-            triviaCurrentQuestion++;
-            if (triviaCurrentQuestion < triviaQuestions.length) {
-                showTriviaQuestion();
-            } else {
-                // Game over
-                triviaResult.textContent = `Game Over! You scored ${triviaCorrectAnswers} out of ${triviaQuestions.length}`;
-                updateScore('trivia', triviaCorrectAnswers);
-                nextTriviaQuestion.style.display = 'none';
-                startTriviaGame.style.display = 'inline-block';
-            }
-        }
-
-        function showTriviaQuestion() {
-            const question = triviaQuestions[triviaCurrentQuestion];
-            triviaQuestion.textContent = question.question;
-            
-            // Clear previous options
-            triviaOptions.innerHTML = '';
-            
-            // Add new options
-            question.options.forEach((option, index) => {
-                const optionElement = document.createElement('div');
-                optionElement.classList.add('trivia-option');
-                optionElement.textContent = option;
-                optionElement.dataset.index = index;
-                optionElement.addEventListener('click', selectTriviaAnswer);
-                triviaOptions.appendChild(optionElement);
-            });
-        }
-
-        function selectTriviaAnswer(e) {
-            const selectedOption = e.target;
-            const question = triviaQuestions[triviaCurrentQuestion];
-            const options = Array.from(triviaOptions.children);
-            
-            // Disable all options
-            options.forEach(option => {
-                option.style.pointerEvents = 'none';
-            });
-            
-            // Mark correct and incorrect answers
-            if (parseInt(selectedOption.dataset.index) === question.answer) {
-                selectedOption.classList.add('correct');
-                triviaCorrectAnswers++;
-                triviaScore.textContent = triviaCorrectAnswers;
-                triviaResult.textContent = 'Correct!';
-            } else {
-                selectedOption.classList.add('incorrect');
-                options[question.answer].classList.add('correct');
-                triviaResult.textContent = 'Incorrect!';
-            }
-            
-            // Enable next question button
-            nextTriviaQuestion.disabled = false;
-        }
-
-        // Update user score in Firebase
-        function updateScore(gameType, score) {
-            if (!userData) return;
-            
-            const scoresRef = database.ref(`scores/${userData.uid}/${gameType}`);
-            
-            // Get current high score
-            scoresRef.once('value').then((snapshot) => {
-                const currentHighScore = snapshot.val() || 0;
-                if (score > currentHighScore) {
-                    scoresRef.set(score);
+                // Update broadcaster options
+                broadcasterOptions.innerHTML = '';
+                mockMatchData.broadcasters.forEach(broadcaster => {
+                    const btn = document.createElement('button');
+                    btn.className = `broadcaster-btn ${broadcaster.available ? '' : 'disabled'}`;
+                    btn.textContent = broadcaster.name;
+                    btn.dataset.id = broadcaster.id;
+                    btn.disabled = !broadcaster.available;
                     
-                    // Also update in the leaderboard
-                    const leaderboardRef = database.ref(`leaderboard/${gameType}/${userData.uid}`);
-                    leaderboardRef.set({
-                        name: userData.displayName,
-                        score: score
-                    });
-                }
-            });
+                    if (broadcaster.available) {
+                        btn.addEventListener('click', () => {
+                            document.querySelectorAll('.broadcaster-btn').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                            selectBroadcaster(broadcaster.id);
+                        });
+                    }
+                    
+                    broadcasterOptions.appendChild(btn);
+                });
+
+            } catch (error) {
+                console.error('Error loading match data:', error);
+            }
         }
+
+        // Initialize streaming
+        function initStreaming() {
+            // Initialize video.js player
+            player = videojs('liveStreamPlayer', {
+                controls: true,
+                autoplay: false,
+                preload: 'auto',
+                responsive: true,
+                fluid: true
+            });
+
+            // For demo purposes, auto-select the first available broadcaster after 2 seconds
+            setTimeout(() => {
+                const firstAvailable = document.querySelector('.broadcaster-btn:not(.disabled)');
+                if (firstAvailable) {
+                    firstAvailable.click();
+                }
+            }, 2000);
+        }
+
+        // Select broadcaster and load stream
+        function selectBroadcaster(broadcasterId) {
+            // In a real implementation, you would call your backend API
+            // to get the stream URL for the selected broadcaster
+            // For demo purposes, we're using mock streams
+            
+            let streamUrl;
+            switch(broadcasterId) {
+                case 'dazn':
+                    streamUrl = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
+                    break;
+                case 'espn':
+                    streamUrl = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+                    break;
+                default:
+                    streamUrl = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
+            }
+            
+            currentStream = {
+                id: broadcasterId,
+                url: streamUrl
+            };
+            
+            loadStream(currentStream);
+        }
+
+        // Load the stream
+        function loadStream(streamConfig) {
+            streamPlaceholder.style.display = 'none';
+            liveStreamPlayer.style.display = 'block';
+            
+            // Reset player
+            player.pause();
+            player.src('');
+            
+            if (Hls.isSupported()) {
+                // Destroy previous HLS instance if exists
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                }
+                
+                // Create new HLS instance
+                hlsInstance = new Hls();
+                hlsInstance.loadSource(streamConfig.url);
+                hlsInstance.attachMedia(liveStreamPlayer);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                    player.play();
+                    qualityBtn.style.display = 'inline-flex';
+                });
+            } else if (liveStreamPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                liveStreamPlayer.src = streamConfig.url;
+                liveStreamPlayer.play();
+                qualityBtn.style.display = 'none';
+            } else {
+                // Fallback
+                streamPlaceholder.style.display = 'flex';
+                liveStreamPlayer.style.display = 'none';
+                streamPlaceholder.innerHTML = `
+                    <div>
+                        <p>Stream not supported in your browser</p>
+                        <p>Try using Chrome, Firefox, or Edge</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Quality selector
+        qualityBtn.addEventListener('click', () => {
+            if (hlsInstance) {
+                const levels = hlsInstance.levels;
+                const currentLevel = hlsInstance.currentLevel;
+                
+                // Simple quality switcher for demo
+                const newLevel = (currentLevel + 1) % levels.length;
+                hlsInstance.currentLevel = newLevel;
+                
+                qualityBtn.innerHTML = `<i class="fas fa-tachometer-alt"></i> Quality: ${levels[newLevel].height}p`;
+            }
+        });
+
+        // Simulate live match updates
+        setInterval(() => {
+            const minute = parseInt(matchMinute.textContent) || 0;
+            if (minute < 90) {
+                matchMinute.textContent = `${minute + 1}'`;
+                matchTime.textContent = `LIVE ${minute + 1}'`;
+                
+                // Random match events
+                if (Math.random() > 0.9) {
+                    const events = [
+                        "Corner kick",
+                        "Free kick",
+                        "Yellow card",
+                        "Substitution",
+                        "Shot on target"
+                    ];
+                    const randomEvent = events[Math.floor(Math.random() * events.length)];
+                    
+                    const comment = document.createElement('p');
+                    comment.innerHTML = `<strong>${minute + 1}'</strong> ${randomEvent}`;
+                    liveCommentary.insertBefore(comment, liveCommentary.firstChild);
+                    
+                    // Keep only the last 20 comments
+                    if (liveCommentary.children.length > 20) {
+                        liveCommentary.removeChild(liveCommentary.lastChild);
+                    }
+                }
+                
+                // Random goal
+                if (minute > 30 && minute < 80 && Math.random() > 0.98) {
+                    const isHomeGoal = Math.random() > 0.5;
+                    if (isHomeGoal) {
+                        const homeScore = parseInt(matchScore.textContent.split('-')[0]) + 1;
+                        matchScore.textContent = `${homeScore} - ${matchScore.textContent.split('-')[1]}`;
+                        
+                        const comment = document.createElement('p');
+                        comment.innerHTML = `<strong>${minute + 1}' GOAL!</strong> ${homeTeamName.textContent} scores!`;
+                        liveCommentary.insertBefore(comment, liveCommentary.firstChild);
+                    } else {
+                        const awayScore = parseInt(matchScore.textContent.split('-')[1]) + 1;
+                        matchScore.textContent = `${matchScore.textContent.split('-')[0]} - ${awayScore}`;
+                        
+                        const comment = document.createElement('p');
+                        comment.innerHTML = `<strong>${minute + 1}' GOAL!</strong> ${awayTeamName.textContent} scores!`;
+                        liveCommentary.insertBefore(comment, liveCommentary.firstChild);
+                    }
+                }
+            } else if (minute === 90) {
+                matchTime.textContent = "FULL TIME";
+            }
+        }, 30000); // Update every 30 seconds for demo purposes
     </script>
 </body>
 </html>
