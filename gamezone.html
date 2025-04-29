@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italy Kids - Game Zone</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --italy-blue: #0066CC;
+            --italy-green: #009966;
+            --italy-red: #E32017;
+            --dark: #1D3557;
+            --light: #F1FAEE;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--italy-blue), var(--dark));
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--italy-green);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .gamezone-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .game-header h1 {
+            font-size: 2.5rem;
+            color: var(--italy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .live-match {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .live-match h2 {
+            color: var(--italy-red);
+            margin-bottom: 1rem;
+        }
+
+        .viewers {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .viewers span {
+            font-weight: bold;
+            color: var(--italy-green);
+        }
+
+        .btn {
+            background: var(--italy-blue);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--dark);
+        }
+
+        .btn-red {
+            background: var(--italy-red);
+        }
+
+        .btn-green {
+            background: var(--italy-green);
+        }
+
+        .game-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .game-section h2 {
+            color: var(--italy-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-section .score {
+            font-weight: bold;
+            color: var(--italy-green);
+        }
+
+        /* Memory Game Styles */
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .memory-game {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: var(--italy-blue);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            position: relative;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+            background: var(--italy-green);
+        }
+
+        .memory-card.matched {
+            background: var(--italy-red);
+            cursor: default;
+        }
+
+        /* Trivia Game Styles */
+        .trivia-question {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .trivia-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .trivia-option {
+            padding: 0.8rem;
+            background: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trivia-option:hover {
+            background: #e0e0e0;
+        }
+
+        .trivia-option.correct {
+            background: var(--italy-green);
+            color: white;
+        }
+
+        .trivia-option.incorrect {
+            background: var(--italy-red);
+            color: white;
+        }
+
+        .game-result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--italy-blue);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--italy-green);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .memory-game {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Italy Kids</div>
+            <div class="nav-links">
+                <a href="dashboard.html"><i class="fas fa-home"></i> Home</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+                <a href="players.html"><i class="fas fa-users"></i> Players</a>
+                <a href="gallery.html"><i class="fas fa-images"></i> Gallery</a>
+                <a href="schedule.html"><i class="fas fa-calendar-alt"></i> Schedule</a>
+                <a href="coaches.html"><i class="fas fa-chalkboard-teacher"></i> Coaches</a>
+                <a href="gamezone.html"><i class="fas fa-futbol"></i> Game Zone</a>        
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="gamezone-container">
+        <div class="user-info" id="userInfo">
+            <div class="user-avatar" id="userAvatar"></div>
+            <span id="userName"></span>
+            <button class="btn btn-red" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+
+        <div class="game-header">
+            <h1><i class="fas fa-gamepad"></i> Game Zone</h1>
+            <p>Play and compete with your team!</p>
+        </div>
+
+        <div class="live-match">
+            <h2><i class="fas fa-tv"></i> Live Match</h2>
+            <div class="viewers">Viewers: <span id="viewerCount">0</span></div>
+            <button class="btn" id="shareBtn">
+                <i class="fas fa-share-alt"></i> Share
+            </button>
+        </div>
+
+        <!-- Memory Match Game -->
+        <div class="game-section">
+            <h2>
+                <span><i class="fas fa-brain"></i> Memory Match</span>
+                <span>Score: <span class="score" id="memoryScore">0</span></span>
+            </h2>
+            <div class="memory-game" id="memoryGame"></div>
+            <div style="text-align: center;">
+                <button class="btn btn-green" id="startMemoryGame">Start Game</button>
+                <button class="btn btn-red" id="resetMemoryGame">Reset</button>
+            </div>
+        </div>
+
+        <!-- Trivia Game -->
+        <div class="game-section">
+            <h2>
+                <span><i class="fas fa-question-circle"></i> Italy Kids Trivia</span>
+                <span>Score: <span class="score" id="triviaScore">0</span></span>
+            </h2>
+            <div id="triviaGame">
+                <div class="trivia-question" id="triviaQuestion">Ready to test your knowledge?</div>
+                <div class="trivia-options" id="triviaOptions"></div>
+                <div class="game-result" id="triviaResult"></div>
+                <div style="text-align: center;">
+                    <button class="btn btn-green" id="startTriviaGame">Start Trivia</button>
+                    <button class="btn btn-red" id="nextTriviaQuestion" style="display: none;">Next Question</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Italy Kids. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
+            authDomain: "learning-56336.firebaseapp.com",
+            projectId: "learning-56336",
+            storageBucket: "learning-56336.appspot.com",
+            messagingSenderId: "1097871497996",
+            appId: "1:1097871497996:web:ea6ed217bce6685a978729",
+            measurementId: "G-MT2NESLNZS",
+            databaseURL: "https://learning-56336-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        // DOM Elements
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const viewerCount = document.getElementById('viewerCount');
+        const shareBtn = document.getElementById('shareBtn');
+        const memoryGame = document.getElementById('memoryGame');
+        const memoryScore = document.getElementById('memoryScore');
+        const startMemoryGame = document.getElementById('startMemoryGame');
+        const resetMemoryGame = document.getElementById('resetMemoryGame');
+        const triviaQuestion = document.getElementById('triviaQuestion');
+        const triviaOptions = document.getElementById('triviaOptions');
+        const triviaScore = document.getElementById('triviaScore');
+        const triviaResult = document.getElementById('triviaResult');
+        const startTriviaGame = document.getElementById('startTriviaGame');
+        const nextTriviaQuestion = document.getElementById('nextTriviaQuestion');
+
+        // Game Variables
+        let memoryCards = [];
+        let hasFlippedCard = false;
+        let lockBoard = false;
+        let firstCard, secondCard;
+        let memoryMatches = 0;
+        let triviaCurrentQuestion = 0;
+        let triviaCorrectAnswers = 0;
+        let triviaQuestions = [];
+        let userData = null;
+
+        // Trivia Questions
+        const triviaData = [
+            {
+                question: "What year was the Italy Kids team founded?",
+                options: ["2010", "2015", "2018", "2020"],
+                answer: 1
+            },
+            {
+                question: "Who is the current coach of Italy Kids?",
+                options: ["Marco Rossi", "Giovanni Bianchi", "Luca Verdi", "Alessandro Neri"],
+                answer: 0
+            },
+            {
+                question: "How many championships has Italy Kids won?",
+                options: ["2", "5", "7", "10"],
+                answer: 2
+            },
+            {
+                question: "What is the team's primary color?",
+                options: ["Red", "Blue", "Green", "White"],
+                answer: 1
+            },
+            {
+                question: "Where does Italy Kids typically practice?",
+                options: ["Rome", "Milan", "Turin", "Naples"],
+                answer: 0
+            }
+        ];
+
+        // Memory Game Icons (Font Awesome)
+        const memoryIcons = [
+            'futbol', 'trophy', 'tshirt', 'whistle',
+            'medal', 'flag', 'running', 'stopwatch'
+        ];
+
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                // Display user info
+                const displayName = user.displayName || user.email.split('@')[0];
+                userName.textContent = displayName;
+                userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                
+                // Set random background color for avatar
+                const colors = ['#E63946', '#1D3557', '#457B9D', '#A8DADC', '#009966'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                userAvatar.style.backgroundColor = randomColor;
+                
+                // Save user data
+                userData = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: displayName
+                };
+                
+                // Initialize games
+                initMemoryGame();
+                initTriviaGame();
+                
+                // Initialize real-time viewer count
+                initViewerCount();
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('There was a problem logging out. Please try again.');
+            }
+        });
+
+        // Share Button Functionality
+        shareBtn.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Italy Kids Game Zone',
+                    text: 'Check out the live match on Italy Kids!',
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('Error sharing:', err);
+                });
+            } else {
+                alert('Web Share API not supported. Copy this link: ' + window.location.href);
+            }
+        });
+
+        // Initialize real-time viewer count
+        function initViewerCount() {
+            const viewerRef = database.ref('gamezone/viewers');
+            
+            // Get current viewer count
+            viewerRef.on('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                viewerCount.textContent = count.toLocaleString();
+            });
+            
+            // Increment viewer count when page loads
+            viewerRef.transaction((current) => {
+                return (current || 0) + 1;
+            });
+            
+            // Decrement when user leaves
+            window.addEventListener('beforeunload', () => {
+                viewerRef.transaction((current) => {
+                    return (current || 0) - 1;
+                });
+            });
+        }
+
+        // Memory Game Functions
+        function initMemoryGame() {
+            startMemoryGame.addEventListener('click', startMemoryGameHandler);
+            resetMemoryGame.addEventListener('click', resetMemoryGameHandler);
+        }
+
+        function startMemoryGameHandler() {
+            memoryMatches = 0;
+            memoryScore.textContent = '0';
+            createMemoryBoard();
+            startMemoryGame.style.display = 'none';
+            resetMemoryGame.style.display = 'inline-block';
+        }
+
+        function resetMemoryGameHandler() {
+            memoryGame.innerHTML = '';
+            memoryMatches = 0;
+            memoryScore.textContent = '0';
+            startMemoryGame.style.display = 'inline-block';
+            resetMemoryGame.style.display = 'none';
+        }
+
+        function createMemoryBoard() {
+            memoryCards = [];
+            memoryGame.innerHTML = '';
+            
+            // Create pairs of cards
+            const gameIcons = [...memoryIcons, ...memoryIcons];
+            gameIcons.sort(() => 0.5 - Math.random());
+            
+            gameIcons.forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.classList.add('memory-card');
+                card.dataset.icon = icon;
+                card.dataset.index = index;
+                card.innerHTML = `<i class="fas fa-${icon}"></i>`;
+                card.addEventListener('click', flipCard);
+                memoryGame.appendChild(card);
+                memoryCards.push(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+            if (this.classList.contains('matched')) return;
+            
+            this.classList.add('flipped');
+            
+            if (!hasFlippedCard) {
+                // First click
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+            
+            // Second click
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            const isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
+            
+            if (isMatch) {
+                disableCards();
+                memoryMatches++;
+                memoryScore.textContent = memoryMatches;
+                updateScore('memory', memoryMatches);
+                
+                // Check if game is complete
+                if (memoryMatches === memoryIcons.length) {
+                    setTimeout(() => {
+                        alert(`Congratulations! You matched all ${memoryIcons.length} pairs!`);
+                    }, 500);
+                }
+            } else {
+                unflipCards();
+            }
+        }
+
+        function disableCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            
+            resetBoard();
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        // Trivia Game Functions
+        function initTriviaGame() {
+            startTriviaGame.addEventListener('click', startTriviaGameHandler);
+            nextTriviaQuestion.addEventListener('click', nextTriviaQuestionHandler);
+            
+            // Shuffle questions
+            triviaQuestions = [...triviaData].sort(() => 0.5 - Math.random());
+        }
+
+        function startTriviaGameHandler() {
+            triviaCurrentQuestion = 0;
+            triviaCorrectAnswers = 0;
+            triviaScore.textContent = '0';
+            triviaResult.textContent = '';
+            startTriviaGame.style.display = 'none';
+            nextTriviaQuestion.style.display = 'inline-block';
+            showTriviaQuestion();
+        }
+
+        function nextTriviaQuestionHandler() {
+            triviaCurrentQuestion++;
+            if (triviaCurrentQuestion < triviaQuestions.length) {
+                showTriviaQuestion();
+            } else {
+                // Game over
+                triviaResult.textContent = `Game Over! You scored ${triviaCorrectAnswers} out of ${triviaQuestions.length}`;
+                updateScore('trivia', triviaCorrectAnswers);
+                nextTriviaQuestion.style.display = 'none';
+                startTriviaGame.style.display = 'inline-block';
+            }
+        }
+
+        function showTriviaQuestion() {
+            const question = triviaQuestions[triviaCurrentQuestion];
+            triviaQuestion.textContent = question.question;
+            
+            // Clear previous options
+            triviaOptions.innerHTML = '';
+            
+            // Add new options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('trivia-option');
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                optionElement.addEventListener('click', selectTriviaAnswer);
+                triviaOptions.appendChild(optionElement);
+            });
+        }
+
+        function selectTriviaAnswer(e) {
+            const selectedOption = e.target;
+            const question = triviaQuestions[triviaCurrentQuestion];
+            const options = Array.from(triviaOptions.children);
+            
+            // Disable all options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Mark correct and incorrect answers
+            if (parseInt(selectedOption.dataset.index) === question.answer) {
+                selectedOption.classList.add('correct');
+                triviaCorrectAnswers++;
+                triviaScore.textContent = triviaCorrectAnswers;
+                triviaResult.textContent = 'Correct!';
+            } else {
+                selectedOption.classList.add('incorrect');
+                options[question.answer].classList.add('correct');
+                triviaResult.textContent = 'Incorrect!';
+            }
+            
+            // Enable next question button
+            nextTriviaQuestion.disabled = false;
+        }
+
+        // Update user score in Firebase
+        function updateScore(gameType, score) {
+            if (!userData) return;
+            
+            const scoresRef = database.ref(`scores/${userData.uid}/${gameType}`);
+            
+            // Get current high score
+            scoresRef.once('value').then((snapshot) => {
+                const currentHighScore = snapshot.val() || 0;
+                if (score > currentHighScore) {
+                    scoresRef.set(score);
+                    
+                    // Also update in the leaderboard
+                    const leaderboardRef = database.ref(`leaderboard/${gameType}/${userData.uid}`);
+                    leaderboardRef.set({
+                        name: userData.displayName,
+                        score: score
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
