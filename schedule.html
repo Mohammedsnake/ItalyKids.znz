@@ -7,236 +7,404 @@
   <meta name="description" content="Upcoming match schedule for Italy Kids FC football team from Fuoni Melisaba, Zanzibar">
   <style>
     :root {
-      --primary: #0066CC;
-      --secondary: #009966;
-      --accent: #E32017;
-      --light: #F1FAEE;
-      --dark: #1D3557;
-      --text: #333333;
-      --background: #f9f9f9;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      color: var(--text);
-      background-color: var(--background);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    header {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    h1 {
-      font-size: clamp(1.8rem, 4vw, 2.5rem);
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-    }
-    
-    nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
-    
-    nav a:hover, nav a:focus {
-      background-color: rgba(255,255,255,0.2);
-      transform: translateY(-2px);
-      outline: none;
-    }
-    
-    main {
-      flex: 1;
-      width: 100%;
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    
-    #schedule {
-      padding: 1rem 0;
-    }
-    
-    #schedule h2 {
-      text-align: center;
-      color: var(--primary);
-      margin-bottom: 2rem;
-      font-size: 1.8rem;
-    }
-    
-    .schedule-controls {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .filter-options {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
-    
-    .filter-btn {
-      padding: 0.5rem 1rem;
-      background-color: white;
-      border: 1px solid var(--primary);
-      border-radius: 20px;
-      color: var(--primary);
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
-    
-    .filter-btn:hover, .filter-btn.active {
-      background-color: var(--primary);
-      color: white;
-    }
-    
-    #match-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-      background-color: white;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    #match-table th {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem;
-      text-align: left;
-      cursor: pointer;
-      position: relative;
-      transition: background-color 0.3s;
-    }
-    
-    #match-table th:hover {
-      background-color: var(--secondary);
-    }
-    
-    #match-table th::after {
-      content: "↓";
-      position: absolute;
-      right: 1rem;
-      opacity: 0.5;
-      transition: all 0.3s;
-    }
-    
-    #match-table th.asc::after {
-      content: "↑";
-      opacity: 1;
-    }
-    
-    #match-table th.desc::after {
-      content: "↓";
-      opacity: 1;
-    }
-    
-    #match-table td {
-      padding: 1rem;
-      border-bottom: 1px solid #eee;
-    }
-    
-    #match-table tr:last-child td {
-      border-bottom: none;
-    }
-    
-    #match-table tr:hover {
-      background-color: rgba(0,102,204,0.05);
-    }
-    
-    .match-home {
-      border-left: 4px solid var(--secondary);
-    }
-    
-    .match-away {
-      border-left: 4px solid var(--accent);
-    }
-    
-    .match-neutral {
-      border-left: 4px solid #FF9800;
-    }
-    
-    .match-past {
-      opacity: 0.7;
-    }
-    
-    .match-past td {
-      color: #777;
-    }
-    
-    .no-matches {
-      text-align: center;
-      padding: 2rem;
-      color: #666;
-      font-size: 1.1rem;
-    }
-    
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      background-color: var(--dark);
-      color: white;
-      font-size: 0.9rem;
-    }
-    
-    /* Responsive table */
-    @media (max-width: 768px) {
-      #match-table {
-        display: block;
-        overflow-x: auto;
-      }
-      
-      .schedule-controls {
-        flex-direction: column;
-      }
-      
-      .filter-options {
-        justify-content: center;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      #match-table th, #match-table td {
-        padding: 0.8rem;
-        font-size: 0.9rem;
-      }
-      
-      .filter-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-    }
+  /* Color System */
+  --primary: #0066CC;
+  --primary-light: rgba(0, 102, 204, 0.05);
+  --primary-dark: #004d99;
+  --secondary: #009966;
+  --secondary-light: rgba(0, 153, 102, 0.1);
+  --accent: #E32017;
+  --accent-light: rgba(227, 32, 23, 0.1);
+  --light: #F1FAEE;
+  --dark: #1D3557;
+  --text: #333333;
+  --text-light: #777777;
+  --background: #f9f9f9;
+  --white: #ffffff;
+  --neutral: #FF9800;
+  
+  /* Spacing System */
+  --space-xxs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-xxl: 3rem;
+  
+  /* Typography */
+  --text-base: 1rem;
+  --text-sm: 0.9rem;
+  --text-xs: 0.8rem;
+  --text-md: 1.1rem;
+  --text-lg: 1.3rem;
+  --text-xl: 1.8rem;
+  --text-xxl: 2.5rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 15px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.15);
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 20px;
+  --radius-xl: 50px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 
+               'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1 {
+  font-size: clamp(var(--text-xl), 4vw, var(--text-xxl));
+  margin-bottom: var(--space-md);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw, var(--text-xl));
+  color: var(--primary);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+/* Layout */
+header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: var(--white);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+}
+
+nav a {
+  color: var(--white);
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: var(--space-xl) auto;
+  padding: 0 var(--space-md);
+}
+
+/* Schedule Section */
+#schedule {
+  padding: var(--space-md) 0;
+}
+
+.schedule-controls {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.filter-options {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: var(--space-xs) var(--space-md);
+  background-color: var(--white);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-xl);
+  color: var(--primary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+
+.filter-btn:hover,
+.filter-btn:focus,
+.filter-btn.active {
+  background-color: var(--primary);
+  color: var(--white);
+  outline: none;
+}
+
+/* Match Table */
+#match-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-md);
+  box-shadow: var(--shadow-md);
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+#match-table th {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: var(--space-md);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--transition-normal);
+  user-select: none;
+}
+
+#match-table th:hover {
+  background-color: var(--primary-dark);
+}
+
+#match-table th::after {
+  content: "↓";
+  position: absolute;
+  right: var(--space-md);
+  opacity: 0.5;
+  transition: all var(--transition-normal);
+}
+
+#match-table th.asc::after {
+  content: "↑";
+  opacity: 1;
+}
+
+#match-table th.desc::after {
+  content: "↓";
+  opacity: 1;
+}
+
+#match-table td {
+  padding: var(--space-md);
+  border-bottom: 1px solid #eee;
+  transition: background-color var(--transition-fast);
+}
+
+#match-table tr:last-child td {
+  border-bottom: none;
+}
+
+#match-table tr:hover td {
+  background-color: var(--primary-light);
+}
+
+.match-home {
+  border-left: 4px solid var(--secondary);
+}
+
+.match-away {
+  border-left: 4px solid var(--accent);
+}
+
+.match-neutral {
+  border-left: 4px solid var(--neutral);
+}
+
+.match-past {
+  opacity: 0.7;
+}
+
+.match-past td {
+  color: var(--text-light);
+}
+
+.no-matches {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-light);
+  font-size: var(--text-md);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: var(--space-lg);
+  background-color: var(--dark);
+  color: var(--white);
+  font-size: var(--text-sm);
+}
+
+/* Responsive Breakpoints */
+/* Tablet (768px and below) */
+@media (max-width: 768px) {
+  #match-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .schedule-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .filter-options {
+    justify-content: center;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  #match-table th,
+  #match-table td {
+    padding: var(--space-sm);
+    font-size: var(--text-xs);
+    white-space: normal;
+  }
+  
+  #match-table th::after {
+    right: var(--space-sm);
+  }
+  
+  .filter-btn {
+    padding: var(--space-xxs) var(--space-sm);
+    font-size: var(--text-xs);
+  }
+  
+  .no-matches {
+    padding: var(--space-lg);
+  }
+}
+
+/* Small Mobile (360px and below) */
+@media (max-width: 360px) {
+  #match-table {
+    font-size: var(--text-xs);
+  }
+  
+  .filter-options {
+    gap: var(--space-xs);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #f0f0f0;
+    --text-light: #aaaaaa;
+    --background: #1a1a1a;
+    --white: #2d2d2d;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--text);
+  }
+  
+  #match-table {
+    background-color: #2d2d2d;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  #match-table td {
+    border-bottom-color: #444;
+  }
+  
+  .filter-btn {
+    background-color: #333;
+    border-color: var(--primary-light);
+  }
+  
+  .filter-btn.active {
+    background-color: var(--primary);
+  }
+}
+
+/* Print Styles */
+@media print {
+  header, footer, nav, .schedule-controls {
+    display: none;
+  }
+  
+  body {
+    background-color: white;
+    color: black;
+    font-size: 12pt;
+  }
+  
+  #match-table {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  #match-table th {
+    background-color: white;
+    color: black;
+    border-bottom: 2px solid #000;
+  }
+  
+  #match-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Accessibility Improvements */
+a:focus,
+button:focus {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: var(--space-xs) var(--space-sm);
+  z-index: 100;
+  transition: top var(--transition-normal);
+}
+
+.skip-link:focus {
+  top: 0;
+}
   </style>
 </head>
 <body>
@@ -249,7 +417,7 @@
       <a href="gallery.html" aria-label="Visit the Gallery">Gallery</a>
       <a href="schedule.html" aria-label="Match Schedule" class="active">Schedule</a>
       <a href="coaches.html" aria-label="Meet the Coaches">Coaches</a>
-      <a href="gamezone.html"><i class="fas fa-futbol"></i> Game Zone</a>        
+      <a href="gamezone.html" aria-label="Watch Games">Game Zone</a>        
       <a href="contact.html" aria-label="Get in Touch">Contact</a>
     </nav>
   </header>
