@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Italy Kids - Login</title>
+    <title>Football Academy - Login</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --italy-blue: #0066CC;
-            --italy-green: #009966;
-            --italy-red: #E32017;
-            --italy-white: #FFFFFF;
+            --field-green: #2a8a3a;
+            --field-lines: #ffffff;
+            --ball-white: #ffffff;
+            --ball-black: #000000;
+            --jersey-home: #0066CC;
+            --jersey-away: #E32017;
             --light: #F1FAEE;
             --dark: #1D3557;
             --success: #4CAF50;
@@ -41,7 +45,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--italy-blue), var(--italy-green));
+            background: linear-gradient(135deg, #0a3a62, var(--field-green));
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -49,10 +53,46 @@
             color: var(--light);
             padding: 20px;
             line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(transparent 95%, rgba(255,255,255,0.3) 95%),
+                linear-gradient(90deg, transparent 95%, rgba(255,255,255,0.3) 95%);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        .floating-ball {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, var(--ball-white) 0%, var(--ball-white) 45%, var(--ball-black) 45%, var(--ball-black) 50%, var(--ball-white) 50%);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50vw, 25vh) rotate(90deg); }
+            50% { transform: translate(100vw, 50vh) rotate(180deg); }
+            75% { transform: translate(50vw, 75vh) rotate(270deg); }
+            100% { transform: translate(0, 100vh) rotate(360deg); }
         }
 
         .login-container {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: var(--radius-lg);
@@ -65,6 +105,7 @@
             animation: fadeIn 0.5s ease-out;
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
         @keyframes fadeIn {
@@ -76,7 +117,7 @@
             width: 100px;
             height: 100px;
             margin: 0 auto 1.5rem;
-            background: linear-gradient(45deg, var(--italy-green), var(--italy-blue));
+            background: linear-gradient(45deg, var(--jersey-home), var(--jersey-away));
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -84,6 +125,17 @@
             box-shadow: var(--shadow-md);
             border: 3px solid white;
             transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-container::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.2) 100%);
+            border-radius: 50%;
         }
 
         .logo-container:hover {
@@ -92,8 +144,8 @@
         }
 
         .logo-image {
-            width: 100%;
-            height: 100%;
+            width: 80%;
+            height: 80%;
             border-radius: 50%;
             object-fit: cover;
         }
@@ -104,17 +156,78 @@
             color: white;
             font-size: 1.8rem;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
         }
 
         .welcome-text {
             margin-bottom: 2rem;
             color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 2;
+        }
+
+        .football-animation {
+            position: relative;
+            height: 120px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+        }
+
+        .field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--field-green);
+            background-image: 
+                linear-gradient(transparent 90%, rgba(255,255,255,0.5) 90%),
+                linear-gradient(90deg, transparent 90%, rgba(255,255,255,0.5) 90%);
+            background-size: 30px 30px;
+            z-index: 1;
+        }
+
+        .player {
+            position: absolute;
+            width: 40px;
+            height: 80px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 3;
+            bottom: 0;
+        }
+
+        .kicker {
+            left: 15%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><path d="M50 20 Q60 0 70 20 L65 50 Q60 70 50 70 Q40 70 35 50 L30 20 Q40 0 50 20 Z" fill="%230066CC"/><path d="M50 70 L50 150 Q45 180 60 180 L70 180 Q85 180 80 150 L75 70" fill="%230066CC"/></svg>');
+            transform-origin: bottom center;
+        }
+
+        .goalkeeper {
+            right: 15%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><path d="M50 20 Q60 0 70 20 L65 50 Q60 70 50 70 Q40 70 35 50 L30 20 Q40 0 50 20 Z" fill="%23E32017"/><path d="M50 70 L50 150 Q45 180 60 180 L70 180 Q85 180 80 150 L75 70" fill="%23E32017"/></svg>');
+            transform-origin: bottom center;
+        }
+
+        .ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, var(--ball-white) 0%, var(--ball-white) 45%, var(--ball-black) 45%, var(--ball-black) 50%, var(--ball-white) 50%);
+            border-radius: 50%;
+            z-index: 4;
+            bottom: 30px;
+            left: 18%;
+            transform: scale(0);
         }
 
         .form-group {
             margin-bottom: 1.5rem;
             text-align: left;
             position: relative;
+            z-index: 2;
         }
 
         label {
@@ -137,9 +250,9 @@
 
         input:focus {
             outline: none;
-            border-color: var(--italy-green);
+            border-color: var(--jersey-home);
             background-color: white;
-            box-shadow: 0 0 0 3px rgba(0, 153, 102, 0.3);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.3);
         }
 
         .btn {
@@ -147,7 +260,7 @@
             padding: 14px;
             border: none;
             border-radius: var(--radius-md);
-            background-color: var(--italy-red);
+            background-color: var(--jersey-away);
             color: white;
             font-size: 1rem;
             font-weight: 600;
@@ -159,6 +272,9 @@
             justify-content: center;
             gap: 8px;
             box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
         }
 
         .btn:hover:enabled {
@@ -170,6 +286,93 @@
         .btn:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 60%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--dark);
+            transition: var(--transition);
+            padding: 8px;
+            background: none;
+            border: none;
+            z-index: 3;
+        }
+
+        .toggle-password:hover {
+            color: var(--jersey-home);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me input {
+            width: auto;
+            margin-right: 8px;
+            accent-color: var(--jersey-home);
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--dark);
+            color: white;
+            padding: 10px;
+            z-index: 100;
+            transition: top 0.3s;
+            border-radius: 0 0 var(--radius-sm) 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-weak {
+            background-color: var(--error);
+            width: 33%;
+        }
+
+        .strength-medium {
+            background-color: var(--warning);
+            width: 66%;
+        }
+
+        .strength-strong {
+            background-color: var(--success);
+            width: 100%;
         }
 
         .divider {
@@ -214,6 +417,8 @@
             transition: var(--transition);
             box-shadow: var(--shadow-sm);
             border: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .social-btn:hover {
@@ -282,84 +487,6 @@
             position: relative;
         }
 
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 60%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--dark);
-            transition: var(--transition);
-            padding: 8px;
-            background: none;
-            border: none;
-        }
-
-        .toggle-password:hover {
-            color: var(--italy-blue);
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .remember-me input {
-            width: auto;
-            margin-right: 8px;
-            accent-color: var(--italy-green);
-        }
-
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--dark);
-            color: white;
-            padding: 10px;
-            z-index: 100;
-            transition: top 0.3s;
-            border-radius: 0 0 var(--radius-sm) 0;
-        }
-
-        .skip-link:focus {
-            top: 0;
-        }
-
-        /* Password strength indicator */
-        .password-strength {
-            margin-top: 8px;
-            height: 4px;
-            background-color: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .strength-meter {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s, background-color 0.3s;
-        }
-
-        .strength-weak {
-            background-color: var(--error);
-            width: 33%;
-        }
-
-        .strength-medium {
-            background-color: var(--warning);
-            width: 66%;
-        }
-
-        .strength-strong {
-            background-color: var(--success);
-            width: 100%;
-        }
-
-        /* Responsive adjustments */
         @media (max-width: 480px) {
             .login-container {
                 padding: 1.8rem;
@@ -378,6 +505,20 @@
                 font-size: 0.95rem;
             }
 
+            .football-animation {
+                height: 80px;
+            }
+
+            .player {
+                width: 30px;
+                height: 60px;
+            }
+
+            .ball {
+                width: 15px;
+                height: 15px;
+            }
+
             .links {
                 flex-direction: column;
                 align-items: center;
@@ -385,7 +526,21 @@
             }
         }
 
-        /* Loading spinner */
+        @keyframes goalCelebration {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .logo-container {
+            animation: floatLogo 3s ease-in-out infinite;
+        }
+
         .spinner {
             animation: spin 1s linear infinite;
         }
@@ -393,23 +548,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* Floating animation for logo */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .logo-container {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* Ripple effect for buttons */
-        .ripple {
-            position: relative;
-            overflow: hidden;
         }
 
         .ripple-effect {
@@ -427,10 +565,15 @@
                 opacity: 0;
             }
         }
-
     </style>
 </head>
 <body>
+    <!-- Floating background balls -->
+    <div class="floating-ball" style="top:10%; left:10%; animation-delay:0s;"></div>
+    <div class="floating-ball" style="top:30%; left:70%; animation-delay:2s;"></div>
+    <div class="floating-ball" style="top:70%; left:20%; animation-delay:4s;"></div>
+    <div class="floating-ball" style="top:80%; left:80%; animation-delay:6s;"></div>
+    
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
     <div class="login-container" id="main-content">
@@ -439,7 +582,76 @@
         </div>
         
         <h1>Welcome to Italy Kids</h1>
-        <p class="welcome-text">Sign in to access your account and manage your team</p>
+        <p class="welcome-text">Sign in to access your Football Dashboard</p>
+
+        <!-- Football Animation -->
+        <!-- Update the player elements in your HTML -->
+<div class="football-animation">
+    <div class="field"></div>
+    <div class="player kicker" id="kicker">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200">
+            <!-- 3D-style Kicker -->
+            <defs>
+                <linearGradient id="jerseyHome" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0066CC" />
+                    <stop offset="100%" stop-color="#004488" />
+                </linearGradient>
+                <linearGradient id="shortsHome" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#003366" />
+                    <stop offset="100%" stop-color="#001133" />
+                </linearGradient>
+            </defs>
+            <!-- Head -->
+            <circle cx="50" cy="40" r="20" fill="#FFD3B6" stroke="#D9A689" stroke-width="2"/>
+            <!-- Body -->
+            <path d="M50 60 L50 120 Q45 140 60 140 L70 140 Q85 140 80 120 L75 60" fill="url(#jerseyHome)" stroke="#003366" stroke-width="1.5"/>
+            <!-- Shorts -->
+            <path d="M50 120 L50 150 Q45 170 60 170 L70 170 Q85 170 80 150 L75 120" fill="url(#shortsHome)" stroke="#001133" stroke-width="1.5"/>
+            <!-- Arms -->
+            <path d="M30 70 L20 90 L25 95 L35 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
+            <path d="M70 70 L80 90 L75 95 L65 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
+            <!-- Legs -->
+            <path d="M55 170 L55 190 L50 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
+            <path d="M65 170 L65 190 L70 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
+            <!-- Kicking Leg -->
+            <path d="M60 140 L70 130 L75 135 L65 145" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" class="kicking-leg"/>
+        </svg>
+    </div>
+    <div class="player goalkeeper" id="goalkeeper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200">
+            <!-- 3D-style Goalkeeper -->
+            <defs>
+                <linearGradient id="jerseyAway" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#E32017" />
+                    <stop offset="100%" stop-color="#A01812" />
+                </linearGradient>
+                <linearGradient id="shortsAway" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#801010" />
+                    <stop offset="100%" stop-color="#500A0A" />
+                </linearGradient>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.5)"/>
+                </filter>
+            </defs>
+            <!-- Head -->
+            <circle cx="50" cy="40" r="20" fill="#FFD3B6" stroke="#D9A689" stroke-width="2" filter="url(#shadow)"/>
+            <!-- Body -->
+            <path d="M50 60 L50 120 Q45 140 60 140 L70 140 Q85 140 80 120 L75 60" fill="url(#jerseyAway)" stroke="#A01812" stroke-width="1.5" filter="url(#shadow)"/>
+            <!-- Shorts -->
+            <path d="M50 120 L50 150 Q45 170 60 170 L70 170 Q85 170 80 150 L75 120" fill="url(#shortsAway)" stroke="#500A0A" stroke-width="1.5" filter="url(#shadow)"/>
+            <!-- Arms -->
+            <path d="M30 70 L10 90 L15 95 L35 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
+            <path d="M70 70 L90 90 L85 95 L65 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
+            <!-- Legs -->
+            <path d="M55 170 L55 190 L50 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
+            <path d="M65 170 L65 190 L70 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
+            <!-- Gloves -->
+            <circle cx="15" cy="95" r="8" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" filter="url(#shadow)"/>
+            <circle cx="85" cy="95" r="8" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" filter="url(#shadow)"/>
+        </svg>
+    </div>
+    <div class="ball" id="ball"></div>
+</div>
 
         <div class="alert alert-error" id="errorMessage" role="alert" aria-live="assertive"></div>
         <div class="alert alert-success" id="successMessage" role="status" aria-live="polite"></div>
@@ -465,7 +677,7 @@
                 <label for="rememberMe">Remember me</label>
             </div>
             
-            <button type="submit" class="btn ripple" id="loginBtn">
+            <button type="submit" class="btn" id="loginBtn">
                 <span id="loginText">Sign In</span>
                 <i class="fas fa-spinner spinner" id="loginSpinner" style="display: none;"></i>
             </button>
@@ -474,11 +686,11 @@
         <div class="divider">OR</div>
         
         <div class="social-login">
-            <button class="social-btn google ripple" id="googleLogin" aria-label="Sign in with Google">
+            <button class="social-btn google" id="googleLogin" aria-label="Sign in with Google">
                 <i class="fab fa-google" id="googleIcon"></i>
                 <i class="fas fa-spinner spinner" id="googleSpinner" style="display: none;"></i>
             </button>
-            <button class="social-btn facebook ripple" id="facebookLogin" aria-label="Sign in with Facebook">
+            <button class="social-btn facebook" id="facebookLogin" aria-label="Sign in with Facebook">
                 <i class="fab fa-facebook-f" id="facebookIcon"></i>
                 <i class="fas fa-spinner spinner" id="facebookSpinner" style="display: none;"></i>
             </button>
@@ -535,56 +747,145 @@
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
         const warningMessage = document.getElementById('warningMessage');
+        const kicker = document.getElementById('kicker');
+        const goalkeeper = document.getElementById('goalkeeper');
+        const ball = document.getElementById('ball');
 
-        // Mobile detection
-        function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            // Auto-focus email field
-            emailInput.focus();
-
-            // Check auth state
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    redirectToDashboard();
+        // Initialize football animation
+        function initFootballAnimation() {
+            // Kick animation sequence
+            const timeline = gsap.timeline({repeat: -1, repeatDelay: 1});
+            
+            timeline.to(kicker, {
+                duration: 0.3,
+                y: -20,
+                rotation: -10,
+                ease: "power1.out",
+                onStart: () => {
+                    gsap.to(ball, {duration: 0.1, scale: 1});
                 }
             });
-
-            // Add ripple effect to buttons
-            document.querySelectorAll('.ripple').forEach(button => {
-                button.addEventListener('click', createRipple);
+            
+            timeline.to(ball, {
+                duration: 1,
+                x: 250,
+                y: -30,
+                ease: "power1.out"
             });
-
-            // Check if returning from Google redirect
-            if (window.location.hash.includes('google-redirect')) {
-                handleGoogleRedirectResult();
-            }
-        });
-
-        // Create ripple effect
-        function createRipple(e) {
-            const btn = e.currentTarget;
-            const circle = document.createElement('span');
-            const rect = btn.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
             
-            circle.style.width = circle.style.height = `${size}px`;
-            circle.style.left = `${x}px`;
-            circle.style.top = `${y}px`;
-            circle.classList.add('ripple-effect');
+            timeline.to(goalkeeper, {
+                duration: 0.5,
+                y: -30,
+                x: -20,
+                rotation: 15,
+                ease: "back.out(1)"
+            }, "-=0.5");
             
-            const ripple = btn.getElementsByClassName('ripple-effect')[0];
-            if (ripple) {
-                ripple.remove();
-            }
+            timeline.to(ball, {
+                duration: 0.3,
+                x: 280,
+                y: 0,
+                scale: 0,
+                ease: "power1.in"
+            });
             
-            btn.appendChild(circle);
+            timeline.to([kicker, goalkeeper], {
+                duration: 0.5,
+                y: 0,
+                rotation: 0,
+                x: 0,
+                ease: "elastic.out(1, 0.5)"
+            });
         }
+
+        // Goal celebration animation
+        function celebrateGoal() {
+            // Stop the regular animation
+            gsap.globalTimeline.getChildren().forEach(t => t.kill());
+            
+            // Animate the ball to goal net
+            gsap.to(ball, {
+                duration: 0.5,
+                x: 350,
+                y: -20,
+                scale: 1.5,
+                ease: "power1.out"
+            });
+            
+            // Create confetti
+            for (let i = 0; i < 50; i++) {
+                createConfetti();
+            }
+            
+            // Animate players celebrating
+            gsap.to(kicker, {
+                duration: 0.5,
+                y: -30,
+                rotation: -20,
+                repeat: 3,
+                yoyo: true,
+                ease: "power1.inOut"
+            });
+            
+            gsap.to(goalkeeper, {
+                duration: 0.5,
+                y: -20,
+                rotation: 10,
+                repeat: 3,
+                yoyo: true,
+                ease: "power1.inOut",
+                delay: 0.2
+            });
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = -10 + 'px';
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            document.body.appendChild(confetti);
+            
+            gsap.to(confetti, {
+                y: Math.random() * 100 + 100,
+                x: (Math.random() - 0.5) * 100,
+                opacity: 1,
+                duration: 1 + Math.random() * 2,
+                onComplete: () => {
+                    confetti.remove();
+                }
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            emailInput.focus();
+            initFootballAnimation();
+            
+            // Add ripple effect to buttons
+            document.querySelectorAll('.btn, .social-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple-effect';
+                    this.appendChild(ripple);
+                    
+                    const rect = this.getBoundingClientRect();
+                    ripple.style.left = (e.clientX - rect.left) + 'px';
+                    ripple.style.top = (e.clientY - rect.top) + 'px';
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    celebrateGoal();
+                    setTimeout(redirectToDashboard, 2000);
+                }
+            });
+        });
 
         // Toggle Password Visibility
         togglePassword.addEventListener('click', () => {
@@ -604,16 +905,13 @@
         function updatePasswordStrength(password) {
             let strength = 0;
             
-            // Length check
             if (password.length >= 8) strength++;
             if (password.length >= 12) strength++;
             
-            // Complexity checks
             if (/[A-Z]/.test(password)) strength++;
             if (/\d/.test(password)) strength++;
             if (/[^A-Za-z0-9]/.test(password)) strength++;
             
-            // Update visual indicator
             passwordStrength.className = 'strength-meter';
             
             if (password.length === 0) {
@@ -649,7 +947,6 @@
             try {
                 showLoading(loginBtn, loginText, loginSpinner);
                 
-                // Set auth persistence
                 await auth.setPersistence(
                     rememberMe.checked 
                         ? firebase.auth.Auth.Persistence.LOCAL 
@@ -660,7 +957,7 @@
                 
                 logEvent('login_success', { method: 'email' });
                 showSuccess('Login successful! Redirecting...');
-                redirectToDashboard();
+                celebrateGoal();
             } catch (error) {
                 logEvent('login_error', { 
                     method: 'email', 
@@ -672,7 +969,12 @@
             }
         });
 
-        // Google Login - Improved for mobile
+        // Mobile detection
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Google Login
         googleLogin.addEventListener('click', async () => {
             try {
                 showLoading(googleLogin, googleIcon, googleSpinner);
@@ -680,11 +982,9 @@
                 provider.setCustomParameters({ prompt: 'select_account' });
                 
                 if (isMobileDevice()) {
-                    // Use redirect flow for mobile devices
                     window.location.hash = 'google-redirect';
                     await auth.signInWithRedirect(provider);
                 } else {
-                    // Use popup flow for desktop
                     const result = await auth.signInWithPopup(provider);
                     handleLoginSuccess(result, 'google');
                 }
@@ -709,7 +1009,6 @@
                 handleAuthError(error);
             } finally {
                 hideLoading(googleLogin, googleIcon, googleSpinner);
-                // Clear the hash
                 history.replaceState(null, null, ' ');
             }
         }
@@ -735,6 +1034,7 @@
         function handleLoginSuccess(result, method) {
             logEvent('login_success', { method: method });
             showSuccess(`${method.charAt(0).toUpperCase() + method.slice(1)} login successful!`);
+            celebrateGoal();
             redirectToDashboard();
         }
 
@@ -797,7 +1097,6 @@
             
             showError(userMessage);
             
-            // For certain errors, suggest actions
             if (error.code === 'auth/user-not-found') {
                 const registerLink = document.createElement('a');
                 registerLink.href = 'register.html';
@@ -854,6 +1153,11 @@
                 analytics.logEvent(eventName, params);
             }
             console.log(`Event: ${eventName}`, params);
+        }
+
+        // Check if returning from Google redirect
+        if (window.location.hash.includes('google-redirect')) {
+            handleGoogleRedirectResult();
         }
     </script>
 </body>
