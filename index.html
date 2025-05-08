@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Italy Kids - Login</title>
-    <!-- Firebase SDK -->
+    <title>Football Academy - Login</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
-    <!-- GSAP for advanced animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -568,7 +564,6 @@
     </style>
 </head>
 <body>
-    <!-- Floating background balls -->
     <div class="floating-ball" style="top:10%; left:10%; animation-delay:0s;"></div>
     <div class="floating-ball" style="top:30%; left:70%; animation-delay:2s;"></div>
     <div class="floating-ball" style="top:70%; left:20%; animation-delay:4s;"></div>
@@ -584,12 +579,10 @@
         <h1>Welcome to Italy Kids</h1>
         <p class="welcome-text">Sign in to access your Football Dashboard</p>
 
-        <!-- Football Animation -->
         <div class="football-animation">
             <div class="field"></div>
             <div class="player kicker" id="kicker">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200">
-                    <!-- 3D-style Kicker -->
                     <defs>
                         <linearGradient id="jerseyHome" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#0066CC" />
@@ -600,25 +593,18 @@
                             <stop offset="100%" stop-color="#001133" />
                         </linearGradient>
                     </defs>
-                    <!-- Head -->
                     <circle cx="50" cy="40" r="20" fill="#FFD3B6" stroke="#D9A689" stroke-width="2"/>
-                    <!-- Body -->
                     <path d="M50 60 L50 120 Q45 140 60 140 L70 140 Q85 140 80 120 L75 60" fill="url(#jerseyHome)" stroke="#003366" stroke-width="1.5"/>
-                    <!-- Shorts -->
                     <path d="M50 120 L50 150 Q45 170 60 170 L70 170 Q85 170 80 150 L75 120" fill="url(#shortsHome)" stroke="#001133" stroke-width="1.5"/>
-                    <!-- Arms -->
                     <path d="M30 70 L20 90 L25 95 L35 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
                     <path d="M70 70 L80 90 L75 95 L65 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
-                    <!-- Legs -->
                     <path d="M55 170 L55 190 L50 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
                     <path d="M65 170 L65 190 L70 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5"/>
-                    <!-- Kicking Leg -->
                     <path d="M60 140 L70 130 L75 135 L65 145" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" class="kicking-leg"/>
                 </svg>
             </div>
             <div class="player goalkeeper" id="goalkeeper">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200">
-                    <!-- 3D-style Goalkeeper -->
                     <defs>
                         <linearGradient id="jerseyAway" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#E32017" />
@@ -632,19 +618,13 @@
                             <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.5)"/>
                         </filter>
                     </defs>
-                    <!-- Head -->
                     <circle cx="50" cy="40" r="20" fill="#FFD3B6" stroke="#D9A689" stroke-width="2" filter="url(#shadow)"/>
-                    <!-- Body -->
                     <path d="M50 60 L50 120 Q45 140 60 140 L70 140 Q85 140 80 120 L75 60" fill="url(#jerseyAway)" stroke="#A01812" stroke-width="1.5" filter="url(#shadow)"/>
-                    <!-- Shorts -->
                     <path d="M50 120 L50 150 Q45 170 60 170 L70 170 Q85 170 80 150 L75 120" fill="url(#shortsAway)" stroke="#500A0A" stroke-width="1.5" filter="url(#shadow)"/>
-                    <!-- Arms -->
                     <path d="M30 70 L10 90 L15 95 L35 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
                     <path d="M70 70 L90 90 L85 95 L65 75" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
-                    <!-- Legs -->
                     <path d="M55 170 L55 190 L50 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
                     <path d="M65 170 L65 190 L70 195" fill="#FFD3B6" stroke="#D9A689" stroke-width="1.5" filter="url(#shadow)"/>
-                    <!-- Gloves -->
                     <circle cx="15" cy="95" r="8" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" filter="url(#shadow)"/>
                     <circle cx="85" cy="95" r="8" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" filter="url(#shadow)"/>
                 </svg>
@@ -709,7 +689,6 @@
     </div>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
             authDomain: "learning-56336.firebaseapp.com",
@@ -720,14 +699,12 @@
             measurementId: "G-MT2NESLNZS"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
         const analytics = firebase.analytics();
 
-        // DOM Elements
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -750,9 +727,7 @@
         const goalkeeper = document.getElementById('goalkeeper');
         const ball = document.getElementById('ball');
 
-        // Initialize football animation
         function initFootballAnimation() {
-            // Kick animation sequence
             const timeline = gsap.timeline({repeat: -1, repeatDelay: 1});
             
             timeline.to(kicker, {
@@ -797,12 +772,9 @@
             });
         }
 
-        // Goal celebration animation
         function celebrateGoal() {
-            // Stop the regular animation
             gsap.globalTimeline.getChildren().forEach(t => t.kill());
             
-            // Animate the ball to goal net
             gsap.to(ball, {
                 duration: 0.5,
                 x: 350,
@@ -811,12 +783,10 @@
                 ease: "power1.out"
             });
             
-            // Create confetti
             for (let i = 0; i < 50; i++) {
                 createConfetti();
             }
             
-            // Animate players celebrating
             gsap.to(kicker, {
                 duration: 0.5,
                 y: -30,
@@ -856,12 +826,10 @@
             });
         }
 
-        // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
             emailInput.focus();
             initFootballAnimation();
             
-            // Add ripple effect to buttons
             document.querySelectorAll('.btn, .social-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     const ripple = document.createElement('span');
@@ -886,7 +854,6 @@
             });
         });
 
-        // Toggle Password Visibility
         togglePassword.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
@@ -896,7 +863,6 @@
                 type === 'password' ? 'Show password' : 'Hide password');
         });
 
-        // Password strength indicator
         passwordInput.addEventListener('input', () => {
             updatePasswordStrength(passwordInput.value);
         });
@@ -924,7 +890,6 @@
             }
         }
 
-        // Email/Password Login
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -958,22 +923,17 @@
                 showSuccess('Login successful! Redirecting...');
                 celebrateGoal();
             } catch (error) {
-                logEvent('login_error', { 
-                    method: 'email', 
-                    error: error.code 
-                });
+                console.error('Login error:', error);
                 handleAuthError(error);
             } finally {
                 hideLoading(loginBtn, loginText, loginSpinner);
             }
         });
 
-        // Mobile detection
         function isMobileDevice() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Google Login
         googleLogin.addEventListener('click', async () => {
             try {
                 showLoading(googleLogin, googleIcon, googleSpinner);
@@ -988,6 +948,7 @@
                     handleLoginSuccess(result, 'google');
                 }
             } catch (error) {
+                console.error('Google sign-in error:', error);
                 handleAuthError(error);
             } finally {
                 if (!isMobileDevice()) {
@@ -996,7 +957,6 @@
             }
         });
 
-        // Handle Google redirect result
         async function handleGoogleRedirectResult() {
             try {
                 showLoading(googleLogin, googleIcon, googleSpinner);
@@ -1005,6 +965,7 @@
                     handleLoginSuccess(result, 'google');
                 }
             } catch (error) {
+                console.error('Google redirect error:', error);
                 handleAuthError(error);
             } finally {
                 hideLoading(googleLogin, googleIcon, googleSpinner);
@@ -1012,7 +973,6 @@
             }
         }
 
-        // Facebook Login
         facebookLogin.addEventListener('click', async () => {
             try {
                 showLoading(facebookLogin, facebookIcon, facebookSpinner);
@@ -1023,13 +983,13 @@
                 const result = await auth.signInWithPopup(provider);
                 handleLoginSuccess(result, 'facebook');
             } catch (error) {
+                console.error('Facebook sign-in error:', error);
                 handleAuthError(error);
             } finally {
                 hideLoading(facebookLogin, facebookIcon, facebookSpinner);
             }
         });
 
-        // Handle successful login
         function handleLoginSuccess(result, method) {
             logEvent('login_success', { method: method });
             showSuccess(`${method.charAt(0).toUpperCase() + method.slice(1)} login successful!`);
@@ -1037,7 +997,6 @@
             redirectToDashboard();
         }
 
-        // Utility Functions
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
@@ -1064,34 +1023,34 @@
         }
 
         function handleAuthError(error) {
-            console.error('Auth error:', error);
+            console.error('Auth error details:', error);
             
             const errorMap = {
                 'auth/invalid-email': 'Please enter a valid email address',
                 'auth/user-disabled': 'Your account has been disabled. Please contact support.',
-                'auth/user-not-found': 'No account found with this email. Would you like to create one?',
-                'auth/wrong-password': 'The password you entered is incorrect. Please try again or reset your password.',
-                'auth/email-already-in-use': 'This email is already registered. Try logging in instead.',
+                'auth/user-not-found': 'No account found with this email.',
+                'auth/wrong-password': 'The password you entered is incorrect.',
+                'auth/email-already-in-use': 'This email is already registered.',
                 'auth/operation-not-allowed': 'This login method is currently unavailable.',
                 'auth/weak-password': 'Your password should be at least 6 characters long.',
                 'auth/popup-closed-by-user': isMobileDevice() 
-                    ? 'Please allow popups or try the redirect method for Google sign-in on mobile' 
-                    : 'The login window was closed before completing the process.',
-                'auth/account-exists-with-different-credential': 'This email is already registered with a different login method.',
-                'auth/requires-recent-login': 'For security reasons, please log in again to perform this action.',
-                'auth/network-request-failed': 'Network error. Please check your internet connection and try again.',
-                'auth/too-many-requests': 'Too many login attempts. Please try again later or reset your password.',
-                'auth/captcha-check-failed': 'Security check failed. Please try again.',
-                'auth/invalid-verification-code': 'The verification code is invalid or has expired.',
-                'auth/invalid-verification-id': 'The verification process failed. Please try again.',
+                    ? 'Please allow popups for Google sign-in on mobile' 
+                    : 'The login window was closed too soon.',
+                'auth/account-exists-with-different-credential': 'This email is registered with another method.',
+                'auth/requires-recent-login': 'Please log in again to continue.',
+                'auth/network-request-failed': 'Network error. Check your connection.',
+                'auth/too-many-requests': 'Too many attempts. Try again later.',
+                'auth/captcha-check-failed': 'Security check failed. Try again.',
+                'auth/invalid-verification-code': 'Verification code is invalid or expired.',
+                'auth/invalid-verification-id': 'Verification failed. Try again.',
                 'auth/missing-verification-code': 'Verification code is required.',
-                'auth/missing-verification-id': 'Verification process failed to start.',
-                'auth/quota-exceeded': 'Service quota exceeded. Please try again later.',
+                'auth/missing-verification-id': 'Verification failed to start.',
+                'auth/quota-exceeded': 'Service limit reached. Try later.',
                 'auth/redirect-cancelled-by-user': 'Sign-in was cancelled',
-                'auth/redirect-operation-pending': 'Another sign-in operation is already in progress'
+                'auth/redirect-operation-pending': 'Another sign-in is already in progress'
             };
 
-            const defaultMessage = 'An unexpected error occurred. Please try again.';
+            const defaultMessage = 'An error occurred. Please try again.';
             const userMessage = errorMap[error.code] || defaultMessage;
             
             showError(userMessage);
@@ -1099,11 +1058,10 @@
             if (error.code === 'auth/user-not-found') {
                 const registerLink = document.createElement('a');
                 registerLink.href = 'register.html';
-                registerLink.textContent = ' Create account';
+                registerLink.innerHTML = ' Create account';
                 registerLink.style.marginLeft = '5px';
                 registerLink.style.color = 'white';
                 registerLink.style.textDecoration = 'underline';
-                
                 errorMessage.appendChild(registerLink);
             }
         }
@@ -1154,10 +1112,17 @@
             console.log(`Event: ${eventName}`, params);
         }
 
-        // Check if returning from Google redirect
         if (window.location.hash.includes('google-redirect')) {
             handleGoogleRedirectResult();
         }
+
+        window.addEventListener('offline', () => {
+            showError('You are offline. Please check your internet connection.');
+        });
+
+        window.addEventListener('online', () => {
+            showSuccess('Back online! You can now try signing in again.');
+        });
     </script>
 </body>
 </html>

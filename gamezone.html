@@ -400,6 +400,54 @@ footer {
   padding: var(--space-lg);
   margin-top: var(--space-xl);
 }
+/* Floating Football Ball */
+#chatBall {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #333333, #000000); /* Football colors */
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 9999;
+    animation: float 3s ease-in-out infinite;
+    border: 2px solid #ffffff;
+}
+
+#chatBall:hover {
+    transform: scale(1.1) rotate(20deg);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+#chatBall::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        transparent 0%, 
+        transparent 45%, 
+        white 45%, 
+        white 55%, 
+        transparent 55%),
+        linear-gradient(to right, white 0%, white 100%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
 
 /* Responsive Breakpoints */
 /* Tablet (768px and below) */
@@ -626,6 +674,10 @@ button:focus {
     </main>
 
     <footer>
+      <!-- Floating Football -->
+    <div id="chatBall" onclick="openChat()">
+      <i class="fas fa-futbol"></i> <!-- Football icon -->
+    </div>
         <p>© 2025 Italy Kids. All rights reserved.</p>
         <p><small>All streams are provided by official broadcast partners</small></p>
     </footer>
@@ -1025,6 +1077,9 @@ button:focus {
                 matchTime.textContent = "FULL TIME";
             }
         }, 30000); // Update every 30 seconds for demo purposes
+        function openChat() {
+        window.open('ballBot.html', 'chatWindow', 'width=500,height=600');
+      }
     </script>
 </body>
 </html>

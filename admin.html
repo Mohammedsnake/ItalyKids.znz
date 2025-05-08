@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Italy Kids FC</title>
+  <style>
+    :root {
+      /* Color System */
+      --primary: #0066CC;
+      --primary-light: rgba(0, 102, 204, 0.1);
+      --primary-dark: #004d99;
+      --secondary: #009966;
+      --secondary-light: rgba(0, 153, 102, 0.1);
+      --accent: #E32017;
+      --light: #F1FAEE;
+      --dark: #1D3557;
+      --dark-light: #2A4A7A;
+      --text: #333333;
+      --text-light: #555555;
+      --background: #f9f9f9;
+      --white: #ffffff;
+      --gray-light: #dddddd;
+      --gray-dark: #aaaaaa;
+      --error: #dc3545;
+      --success: #28a745;
+      
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 0.75rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      
+      /* Typography */
+      --text-base: 1rem;
+      --text-sm: 0.875rem;
+      --text-md: 1.125rem;
+      --text-lg: 1.25rem;
+      --text-xl: 1.5rem;
+      --text-xxl: 2rem;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      
+      /* Border Radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 
+                   'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      min-height: 100vh;
+    }
+    
+    /* Layout */
+    .admin-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      background: var(--dark);
+      color: var(--white);
+      padding: var(--space-xl);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h2 {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-xs);
+    }
+    
+    .sidebar-header p {
+      font-size: var(--text-sm);
+      opacity: 0.8;
+    }
+    
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    
+    .sidebar-nav a {
+      color: var(--white);
+      text-decoration: none;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: var(--text-md);
+    }
+    
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-nav a i {
+      width: 24px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      padding: var(--space-xl);
+      overflow-x: auto;
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+    }
+    
+    .page-header h1 {
+      font-size: var(--text-xxl);
+      color: var(--dark);
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--gray-light);
+    }
+    
+    .card-header h2 {
+      font-size: var(--text-lg);
+      color: var(--dark);
+    }
+    
+    /* Forms */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+    
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: var(--space-xs);
+      font-weight: 500;
+      font-size: var(--text-sm);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-base);
+      transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-base);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      gap: var(--space-xs);
+    }
+    
+    .btn i {
+      font-size: 1.1em;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--gray-light);
+      color: var(--text);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--gray-light);
+    }
+    
+    .btn-danger {
+      background-color: var(--error);
+      color: var(--white);
+    }
+    
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    
+    .btn-success {
+      background-color: var(--success);
+      color: var(--white);
+    }
+    
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    
+    .btn-sm {
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--text-sm);
+    }
+    
+    /* Alerts */
+    .alert {
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-md);
+      font-size: var(--text-sm);
+    }
+    
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+    
+    .alert-error {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--error);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+    
+    /* Tables & Lists */
+    .players-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+    
+    .player-card-admin {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      border: 1px solid var(--gray-light);
+    }
+    
+    .player-card-admin:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    .player-card-admin img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    
+    .player-card-admin .player-info {
+      padding: var(--space-md);
+    }
+    
+    .player-card-admin h3 {
+      font-size: var(--text-md);
+      margin-bottom: var(--space-sm);
+      color: var(--dark);
+    }
+    
+    .player-card-admin .player-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-md);
+    }
+    
+    .player-card-admin .player-meta span {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px var(--space-sm);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+    }
+    
+    .player-card-admin .player-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-sm);
+      font-size: var(--text-sm);
+    }
+    
+    .player-card-admin .player-stats div {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .player-card-admin .player-stats strong {
+      color: var(--text-light);
+      font-weight: normal;
+    }
+    
+    .player-card-admin .player-actions {
+      display: flex;
+      gap: var(--space-xs);
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--gray-light);
+    }
+    
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-content {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-header h3 {
+      font-size: var(--text-lg);
+    }
+    
+    .modal-body {
+      padding: var(--space-lg);
+    }
+    
+    .modal-footer {
+      padding: var(--space-md) var(--space-lg);
+      border-top: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-sm);
+    }
+    
+    /* Login Page */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: var(--space-xl);
+      background-color: var(--dark-light);
+    }
+    
+    .login-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+    }
+    
+    .login-header {
+      background: var(--dark);
+      color: var(--white);
+      padding: var(--space-xl);
+      text-align: center;
+    }
+    
+    .login-header h1 {
+      font-size: var(--text-xxl);
+      margin-bottom: var(--space-xs);
+    }
+    
+    .login-body {
+      padding: var(--space-xl);
+    }
+    
+    /* Utility Classes */
+    .text-center {
+      text-align: center;
+    }
+    
+    .text-muted {
+      color: var(--text-light);
+    }
+    
+    .mt-1 { margin-top: var(--space-xs); }
+    .mt-2 { margin-top: var(--space-sm); }
+    .mt-3 { margin-top: var(--space-md); }
+    .mt-4 { margin-top: var(--space-lg); }
+    .mt-5 { margin-top: var(--space-xl); }
+    
+    .mb-1 { margin-bottom: var(--space-xs); }
+    .mb-2 { margin-bottom: var(--space-sm); }
+    .mb-3 { margin-bottom: var(--space-md); }
+    .mb-4 { margin-bottom: var(--space-lg); }
+    .mb-5 { margin-bottom: var(--space-xl); }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        height: auto;
+        position: static;
+        padding: var(--space-lg);
+      }
+      
+      .sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: var(--space-sm);
+      }
+      
+      .sidebar-nav a {
+        white-space: nowrap;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .players-list {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+      }
+    }
+  </style>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- Login Screen (shown by default) -->
+  <div id="login-screen" class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h1>Italy Kids FC</h1>
+        <p>Admin Dashboard</p>
+      </div>
+      <div class="login-body">
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <span id="login-text">Sign In</span>
+            <span id="login-spinner" class="spinner hidden"></span>
+          </button>
+        </form>
+        <div id="login-error" class="alert alert-error mt-3 hidden"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Admin Dashboard (hidden until login) -->
+  <div id="admin-dashboard" class="admin-container hidden">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>Italy Kids FC</h2>
+        <p class="text-muted">Admin Panel</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="active" data-page="dashboard">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" data-page="players">
+          <i class="fas fa-users"></i>
+          <span>Players</span>
+        </a>
+        <a href="#" data-page="teams">
+          <i class="fas fa-shield-alt"></i>
+          <span>Teams</span>
+        </a>
+        <a href="#" data-page="matches">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Matches</span>
+        </a>
+        <a href="#" data-page="media">
+          <i class="fas fa-photo-video"></i>
+          <span>Media</span>
+        </a>
+        <a href="#" data-page="settings">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+        <a href="#" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Dashboard Page -->
+      <div id="dashboard-page" class="page">
+        <div class="page-header">
+          <h1>Dashboard</h1>
+          <div class="user-info">
+            <span id="user-email"></span>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>Quick Stats</h2>
+          </div>
+          <div class="card-body">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <h3>Total Players</h3>
+                <p id="total-players">0</p>
+              </div>
+              <div class="stat-card">
+                <h3>Active Teams</h3>
+                <p>2</p>
+              </div>
+              <div class="stat-card">
+                <h3>Upcoming Matches</h3>
+                <p>3</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Activity</h2>
+          </div>
+          <div class="card-body">
+            <p>No recent activity</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Players Management Page -->
+      <div id="players-page" class="page hidden">
+        <div class="page-header">
+          <h1>Player Management</h1>
+          <button id="add-player-btn" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Player
+          </button>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>All Players</h2>
+            <div class="search-box">
+              <input type="text" id="player-search" class="form-control" placeholder="Search players...">
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="players-list" class="players-list">
+              <!-- Players will be loaded here -->
+              <p>Loading players...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Other pages would go here -->
+      <div id="teams-page" class="page hidden">
+        <div class="page-header">
+          <h1>Team Management</h1>
+        </div>
+        <p>Team management content goes here</p>
+      </div>
+      
+      <div id="matches-page" class="page hidden">
+        <div class="page-header">
+          <h1>Match Schedule</h1>
+        </div>
+        <p>Match schedule content goes here</p>
+      </div>
+      
+      <div id="media-page" class="page hidden">
+        <div class="page-header">
+          <h1>Media Library</h1>
+        </div>
+        <p>Media library content goes here</p>
+      </div>
+      
+      <div id="settings-page" class="page hidden">
+        <div class="page-header">
+          <h1>Settings</h1>
+        </div>
+        <p>Settings content goes here</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add/Edit Player Modal -->
+  <div id="player-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Add New Player</h3>
+        <button id="close-modal" class="btn btn-outline btn-sm">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="player-form">
+          <input type="hidden" id="player-id">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="player-name">Full Name</label>
+              <input type="text" id="player-name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="player-position">Position(s)</label>
+              <input type="text" id="player-position" class="form-control" 
+                     placeholder="Separate with spaces (e.g., Forward Midfielder)" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="player-age">Age</label>
+              <input type="number" id="player-age" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="player-jersey">Jersey Number</label>
+              <input type="text" id="player-jersey" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="player-joined">Joined Year</label>
+              <input type="number" id="player-joined" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="player-instagram">Instagram URL</label>
+              <input type="url" id="player-instagram" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="player-photo">Player Photo</label>
+              <input type="file" id="player-photo" class="form-control" accept="image/*">
+              <small class="text-muted">Recommended size: 400x400px</small>
+              <div id="photo-preview" class="mt-2 hidden">
+                <img id="preview-image" src="#" alt="Preview" style="max-width: 100px; max-height: 100px; border-radius: var(--radius-sm);">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="cancel-player" class="btn btn-outline">Cancel</button>
+        <button id="save-player" class="btn btn-primary">
+          <span id="save-text">Save Player</span>
+          <span id="save-spinner" class="spinner hidden"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 id="confirm-title">Confirm Action</h3>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message">Are you sure you want to perform this action?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirm-cancel" class="btn btn-outline">Cancel</button>
+        <button id="confirm-action" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDayaLwgjL0LAO7pqn2IhZet2OXgw_jly4",
+      authDomain: "learning-56336.firebaseapp.com",
+      projectId: "learning-56336",
+      storageBucket: "learning-56336.appspot.com",
+      messagingSenderId: "1097871497996",
+      appId: "1:1097871497996:web:ea6ed217bce6685a978729",
+      measurementId: "G-MT2NESLNZS"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    
+    // DOM Elements
+    const loginScreen = document.getElementById('login-screen');
+    const adminDashboard = document.getElementById('admin-dashboard');
+    const loginForm = document.getElementById('login-form');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginError = document.getElementById('login-error');
+    const loginText = document.getElementById('login-text');
+    const loginSpinner = document.getElementById('login-spinner');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userEmail = document.getElementById('user-email');
+    
+    // Pages
+    const pages = {
+      dashboard: document.getElementById('dashboard-page'),
+      players: document.getElementById('players-page'),
+      teams: document.getElementById('teams-page'),
+      matches: document.getElementById('matches-page'),
+      media: document.getElementById('media-page'),
+      settings: document.getElementById('settings-page')
+    };
+    
+    // Player Management
+    const playersList = document.getElementById('players-list');
+    const addPlayerBtn = document.getElementById('add-player-btn');
+    const playerSearch = document.getElementById('player-search');
+    
+    // Modals
+    const playerModal = document.getElementById('player-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const playerForm = document.getElementById('player-form');
+    const playerIdInput = document.getElementById('player-id');
+    const playerName = document.getElementById('player-name');
+    const playerPosition = document.getElementById('player-position');
+    const playerAge = document.getElementById('player-age');
+    const playerJersey = document.getElementById('player-jersey');
+    const playerJoined = document.getElementById('player-joined');
+    const playerInstagram = document.getElementById('player-instagram');
+    const playerPhoto = document.getElementById('player-photo');
+    const photoPreview = document.getElementById('photo-preview');
+    const previewImage = document.getElementById('preview-image');
+    const closeModal = document.getElementById('close-modal');
+    const cancelPlayer = document.getElementById('cancel-player');
+    const savePlayer = document.getElementById('save-player');
+    const saveText = document.getElementById('save-text');
+    const saveSpinner = document.getElementById('save-spinner');
+    
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmTitle = document.getElementById('confirm-title');
+    const confirmMessage = document.getElementById('confirm-message');
+    const confirmCancel = document.getElementById('confirm-cancel');
+    const confirmAction = document.getElementById('confirm-action');
+    
+    // Current state
+    let currentPlayerId = null;
+    let currentPhotoFile = null;
+    
+    // Auth State Listener
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in
+        loginScreen.classList.add('hidden');
+        adminDashboard.classList.remove('hidden');
+        userEmail.textContent = user.email;
+        showPage('dashboard');
+        loadPlayers();
+      } else {
+        // User is signed out
+        loginScreen.classList.remove('hidden');
+        adminDashboard.classList.add('hidden');
+      }
+    });
+    
+    // Login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = loginEmail.value;
+      const password = loginPassword.value;
+      
+      loginText.classList.add('hidden');
+      loginSpinner.classList.remove('hidden');
+      loginError.classList.add('hidden');
+      
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (error) {
+        loginError.textContent = error.message;
+        loginError.classList.remove('hidden');
+      } finally {
+        loginText.classList.remove('hidden');
+        loginSpinner.classList.add('hidden');
+      }
+    });
+    
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      auth.signOut();
+    });
+    
+    // Navigation
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        if (page) {
+          showPage(page);
+        }
+      });
+    });
+    
+    function showPage(page) {
+      // Hide all pages
+      Object.values(pages).forEach(p => p.classList.add('hidden'));
+      
+      // Show selected page
+      if (pages[page]) {
+        pages[page].classList.remove('hidden');
+      }
+      
+      // Update active nav link
+      document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        if (link.dataset.page === page) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    
+    // Player Management
+    addPlayerBtn.addEventListener('click', () => {
+      openPlayerModal();
+    });
+    
+    function openPlayerModal(player = null) {
+      currentPlayerId = player ? player.id : null;
+      currentPhotoFile = null;
+      
+      if (player) {
+        modalTitle.textContent = 'Edit Player';
+        playerIdInput.value = player.id;
+        playerName.value = player.name;
+        playerPosition.value = player.position;
+        playerAge.value = player.age;
+        playerJersey.value = player.jersey;
+        playerJoined.value = player.joined;
+        playerInstagram.value = player.instagram || '';
+        
+        if (player.photoUrl) {
+          photoPreview.classList.remove('hidden');
+          previewImage.src = player.photoUrl;
+        } else {
+          photoPreview.classList.add('hidden');
+        }
+      } else {
+        modalTitle.textContent = 'Add New Player';
+        playerForm.reset();
+        photoPreview.classList.add('hidden');
+      }
+      
+      playerModal.classList.add('active');
+    }
+    
+    function closePlayerModal() {
+      playerModal.classList.remove('active');
+    }
+    
+    closeModal.addEventListener('click', closePlayerModal);
+    cancelPlayer.addEventListener('click', closePlayerModal);
+    
+    // Photo preview
+    playerPhoto.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        currentPhotoFile = file;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          photoPreview.classList.remove('hidden');
+          previewImage.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        photoPreview.classList.add('hidden');
+        currentPhotoFile = null;
+      }
+    });
+    
+    // Save player
+    savePlayer.addEventListener('click', async () => {
+      if (!playerForm.checkValidity()) {
+        playerForm.reportValidity();
+        return;
+      }
+      
+      saveText.classList.add('hidden');
+      saveSpinner.classList.remove('hidden');
+      
+      try {
+        const playerData = {
+          name: playerName.value,
+          position: playerPosition.value,
+          age: parseInt(playerAge.value),
+          jersey: playerJersey.value,
+          joined: parseInt(playerJoined.value),
+          instagram: playerInstagram.value || null,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Upload photo if selected
+        if (currentPhotoFile) {
+          const storageRef = storage.ref(`players/${currentPlayerId || Date.now()}`);
+          const snapshot = await storageRef.put(currentPhotoFile);
+          playerData.photoUrl = await snapshot.ref.getDownloadURL();
+        }
+        
+        if (currentPlayerId) {
+          // Update existing player
+          await db.collection('players').doc(currentPlayerId).update(playerData);
+        } else {
+          // Add new player
+          playerData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('players').add(playerData);
+        }
+        
+        closePlayerModal();
+        loadPlayers();
+      } catch (error) {
+        console.error('Error saving player: ', error);
+        alert('Error saving player: ' + error.message);
+      } finally {
+        saveText.classList.remove('hidden');
+        saveSpinner.classList.add('hidden');
+      }
+    });
+    
+    // Load players
+    async function loadPlayers() {
+      playersList.innerHTML = '<p>Loading players...</p>';
+      
+      try {
+        const snapshot = await db.collection('players')
+          .orderBy('createdAt', 'desc')
+          .get();
+        
+        if (snapshot.empty) {
+          playersList.innerHTML = '<p>No players found</p>';
+          return;
+        }
+        
+        playersList.innerHTML = '';
+        snapshot.forEach(doc => {
+          const player = doc.data();
+          player.id = doc.id;
+          renderPlayerCard(player);
+        });
+        
+        // Update total players count
+        document.getElementById('total-players').textContent = snapshot.size;
+      } catch (error) {
+        console.error('Error loading players: ', error);
+        playersList.innerHTML = '<p>Error loading players</p>';
+      }
+    }
+    
+    // Render player card
+    function renderPlayerCard(player) {
+      const card = document.createElement('div');
+      card.className = 'player-card-admin';
+      
+      card.innerHTML = `
+        ${player.photoUrl ? `<img src="${player.photoUrl}" alt="${player.name}">` : '<div style="height: 200px; background: #eee;"></div>'}
+        <div class="player-info">
+          <h3>${player.name}</h3>
+          <div class="player-meta">
+            ${player.position.split(' ').map(pos => `<span>${pos}</span>`).join('')}
+          </div>
+          <div class="player-stats">
+            <div>
+              <strong>Age:</strong>
+              <span>${player.age}</span>
+            </div>
+            <div>
+              <strong>Jersey:</strong>
+              <span>#${player.jersey}</span>
+            </div>
+            <div>
+              <strong>Joined:</strong>
+              <span>${player.joined}</span>
+            </div>
+          </div>
+          <div class="player-actions">
+            <button class="btn btn-outline btn-sm edit-btn" data-id="${player.id}">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-danger btn-sm delete-btn" data-id="${player.id}">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      `;
+      
+      playersList.appendChild(card);
+      
+      // Add event listeners to buttons
+      card.querySelector('.edit-btn').addEventListener('click', () => {
+        openPlayerModal(player);
+      });
+      
+      card.querySelector('.delete-btn').addEventListener('click', () => {
+        confirmDelete(player);
+      });
+    }
+    
+    // Confirm delete
+    function confirmDelete(player) {
+      currentPlayerId = player.id;
+      confirmTitle.textContent = 'Delete Player';
+      confirmMessage.textContent = `Are you sure you want to delete ${player.name}? This action cannot be undone.`;
+      confirmModal.classList.add('active');
+    }
+    
+    confirmCancel.addEventListener('click', () => {
+      confirmModal.classList.remove('active');
+      currentPlayerId = null;
+    });
+    
+    confirmAction.addEventListener('click', async () => {
+      confirmAction.disabled = true;
+      confirmAction.textContent = 'Deleting...';
+      
+      try {
+        // Delete player document
+        await db.collection('players').doc(currentPlayerId).delete();
+        
+        // TODO: Delete player photo from storage if exists
+        
+        confirmModal.classList.remove('active');
+        loadPlayers();
+      } catch (error) {
+        console.error('Error deleting player: ', error);
+        alert('Error deleting player');
+      } finally {
+        confirmAction.disabled = false;
+        confirmAction.textContent = 'Confirm';
+        currentPlayerId = null;
+      }
+    });
+    
+    // Search players
+    playerSearch.addEventListener('input', () => {
+      const searchTerm = playerSearch.value.toLowerCase();
+      const cards = playersList.querySelectorAll('.player-card-admin');
+      
+      cards.forEach(card => {
+        const name = card.querySelector('h3').textContent.toLowerCase();
+        const position = card.querySelector('.player-meta').textContent.toLowerCase();
+        
+        if (name.includes(searchTerm) || position.includes(searchTerm)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if user is already logged in
+      if (auth.currentUser) {
+        loginScreen.classList.add('hidden');
+        adminDashboard.classList.remove('hidden');
+        userEmail.textContent = auth.currentUser.email;
+        showPage('dashboard');
+        loadPlayers();
+      }
+    });
+  </script>
+</body>
+</html>

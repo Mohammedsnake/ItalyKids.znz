@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italy Kids FC - Chat Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066CC;
+            --secondary: #009966;
+            --accent: #E32017;
+            --light: #F1FAEE;
+            --dark: #1D3557;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: var(--white);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+        }
+        
+        .bot-message {
+            background-color: #e9e9e9;
+            border-top-left-radius: 5px;
+            align-self: flex-start;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+            border-top-right-radius: 5px;
+            margin-left: auto;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background-color: var(--white);
+            border-top: 1px solid #ddd;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        #send-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            background-color: #e9e9e9;
+            border-radius: 18px;
+            width: fit-content;
+            margin-bottom: 15px;
+        }
+        
+        .typing-dots {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: #666;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dots:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-header">
+        <h2>Italy Kids FC Bot ⚽</h2>
+        <p>Ask me anything about our club!</p>
+    </div>
+    
+    <div class="chat-container" id="chat-container">
+        <div class="message bot-message">
+            Hi there! I'm the Italy Kids FC bot. ⚽<br><br>
+            You can ask me about:<br>
+            • Team history<br>
+            • Upcoming matches<br>
+            • Player information<br>
+            • Training schedule<br>
+            • How to join<br>
+            • And more!
+        </div>
+    </div>
+    
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type your question..." autofocus>
+        <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+    
+    <div class="typing-indicator" id="typing-indicator">
+        <span class="typing-dots"></span>
+        <span class="typing-dots"></span>
+        <span class="typing-dots"></span>
+    </div>
+    
+    <script>
+        const knowledgeBase = {
+            "hello": "Hello! Welcome to Italy Kids FC. How can I help you today? ⚽",
+            "hi": "Hi there! What would you like to know about our team?",
+            "history": "Italy Kids FC was founded in 2018 in Fuoni Melisaba, Zanzibar. We started as street footballers and grew into a competitive team that's now the pride of our community!",
+            "achievements": "Our achievements include:<br>• Back-to-Back Ramadhan Tournament Champions (2018 & 2019)<br>• Kapa & Sharo's Cup 2021 Finalists<br>• Community Impact Award 2022",
+            "location": "We're based in Fuoni Melisaba, Zanzibar. Our training ground is at the Italy Street football pitch.",
+            "join": "To join Italy Kids FC:<br>1. Come to our training sessions (Mon/Wed/Fri 4-6pm)<br>2. Speak with Coach Ali<br>3. Complete registration forms<br>All players aged 8-16 are welcome!",
+            "age": "We accept players aged 8 to 16 years old.",
+            "training": "Training schedule:<br>• Monday: 4-6pm (Technical skills)<br>• Wednesday: 4-6pm (Tactical training)<br>• Friday: 4-6pm (Friendly matches)",
+            "coach": "Our head coach is Coach Ali. He's been with the team since 2019 and specializes in youth development.",
+            "contact": "You can contact us via:<br>• Phone: +255 XXX XXX XXX<br>• Email: info@italykidsfc.com<br>• Visit us at Italy Street, Fuoni Melisaba",
+            "matches": "Next matches:<br>1. June 15: vs Kisiki FC (Home)<br>2. June 22: vs Mpendae Stars (Away)<br>3. July 6: Tournament Quarterfinals",
+            "sponsors": "We're currently seeking sponsors to support our young talents! Contact Coach Ali for partnership opportunities.",
+            "values": "Our core values:<br>• Unity<br>• Passion<br>• Community<br>• Sportsmanship<br>• Development",
+            "founder": "The team was founded by a group of local football enthusiasts led by Jamal Abdallah, who wanted to give kids a positive outlet through sports.",
+            "uniform": "Our team colors are blue and white. Home kit: Blue shirts, white shorts. Away kit: White shirts, blue shorts.",
+            "fee": "There's a small monthly fee of TZS 20,000 to cover training equipment and facilities. Scholarships available for those in need.",
+            "default": "I'm not sure I understand. Try asking about:<br>• Team history<br>• How to join<br>• Training schedule<br>• Upcoming matches<br>• Contact information"
+        };
+
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.innerHTML = text;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'block';
+            chatContainer.appendChild(typingIndicator);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function getBotResponse(userMessage) {
+            const lowerCaseMsg = userMessage.toLowerCase();
+            
+            if (lowerCaseMsg.includes('hello') || lowerCaseMsg.includes('hi')) {
+                return knowledgeBase["hello"];
+            } else if (lowerCaseMsg.includes('history')) {
+                return knowledgeBase["history"];
+            } else if (lowerCaseMsg.includes('achieve')) {
+                return knowledgeBase["achievements"];
+            } else if (lowerCaseMsg.includes('location') || lowerCaseMsg.includes('where')) {
+                return knowledgeBase["location"];
+            } else if (lowerCaseMsg.includes('join') || lowerCaseMsg.includes('register')) {
+                return knowledgeBase["join"];
+            } else if (lowerCaseMsg.includes('age') || lowerCaseMsg.includes('old')) {
+                return knowledgeBase["age"];
+            } else if (lowerCaseMsg.includes('train') || lowerCaseMsg.includes('practice')) {
+                return knowledgeBase["training"];
+            } else if (lowerCaseMsg.includes('coach')) {
+                return knowledgeBase["coach"];
+            } else if (lowerCaseMsg.includes('contact')) {
+                return knowledgeBase["contact"];
+            } else if (lowerCaseMsg.includes('match') || lowerCaseMsg.includes('game')) {
+                return knowledgeBase["matches"];
+            } else if (lowerCaseMsg.includes('sponsor') || lowerCaseMsg.includes('donate')) {
+                return knowledgeBase["sponsors"];
+            } else if (lowerCaseMsg.includes('value') || lowerCaseMsg.includes('philosophy')) {
+                return knowledgeBase["values"];
+            } else if (lowerCaseMsg.includes('founder') || lowerCaseMsg.includes('start')) {
+                return knowledgeBase["founder"];
+            } else if (lowerCaseMsg.includes('uniform') || lowerCaseMsg.includes('kit')) {
+                return knowledgeBase["uniform"];
+            } else if (lowerCaseMsg.includes('fee') || lowerCaseMsg.includes('cost')) {
+                return knowledgeBase["fee"];
+            } else {
+                return knowledgeBase["default"];
+            }
+        }
+
+        function handleUserInput() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+            
+            addMessage(message, true);
+            userInput.value = '';
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                const botResponse = getBotResponse(message);
+                addMessage(botResponse, false);
+            }, 1000 + Math.random() * 1000); // Simulate typing delay
+        }
+
+        sendBtn.addEventListener('click', handleUserInput);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleUserInput();
+        });
+    </script>
+</body>
+</html>
