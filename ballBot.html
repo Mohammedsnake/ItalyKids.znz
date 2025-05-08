@@ -7,16 +7,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary: #0066CC;
-            --secondary: #009966;
-            --accent: #E32017;
+            --italy-blue: #0066CC;
+            --italy-green: #009966;
+            --italy-red: #E32017;
             --light: #F1FAEE;
             --dark: #1D3557;
             --white: #ffffff;
+            --shadow-sm: 0 2px 5px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+            --radius-md: 12px;
+            --radius-lg: 20px;
         }
         
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
@@ -26,11 +30,25 @@
         }
         
         .chat-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--italy-blue), var(--dark));
             color: white;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        
+        .chat-header::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--italy-blue);
         }
         
         .chat-container {
@@ -38,25 +56,44 @@
             overflow-y: auto;
             padding: 15px;
             background-color: var(--white);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="30" cy="30" r="5" fill="%23e9e9e9"/></svg>');
+            background-size: 50px 50px;
         }
         
         .message {
             margin-bottom: 15px;
             max-width: 80%;
-            padding: 10px 15px;
-            border-radius: 18px;
-            line-height: 1.4;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            line-height: 1.5;
             position: relative;
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .bot-message {
             background-color: #e9e9e9;
             border-top-left-radius: 5px;
             align-self: flex-start;
+            color: var(--dark);
+        }
+        
+        .bot-message::before {
+            content: "Italy Kids Bot";
+            display: block;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--italy-blue);
+            margin-bottom: 5px;
         }
         
         .user-message {
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            background: linear-gradient(135deg, var(--italy-blue), var(--italy-green));
             color: white;
             border-top-right-radius: 5px;
             margin-left: auto;
@@ -64,45 +101,63 @@
         
         .input-area {
             display: flex;
-            padding: 10px;
+            padding: 12px;
             background-color: var(--white);
             border-top: 1px solid #ddd;
+            position: relative;
         }
         
         #user-input {
             flex: 1;
-            padding: 10px 15px;
+            padding: 12px 18px;
             border: 1px solid #ddd;
-            border-radius: 20px;
+            border-radius: var(--radius-lg);
             outline: none;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        #user-input:focus {
+            border-color: var(--italy-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
         }
         
         #send-btn {
-            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            background: linear-gradient(135deg, var(--italy-green), var(--italy-blue));
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: var(--radius-lg);
             padding: 0 20px;
             margin-left: 10px;
             cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
         .typing-indicator {
             display: none;
-            padding: 10px 15px;
+            padding: 10px 16px;
             background-color: #e9e9e9;
-            border-radius: 18px;
+            border-radius: var(--radius-md);
             width: fit-content;
             margin-bottom: 15px;
+            align-self: flex-start;
         }
         
         .typing-dots {
             display: inline-block;
-            width: 5px;
-            height: 5px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background-color: #666;
-            margin: 0 2px;
+            background-color: var(--italy-blue);
+            margin: 0 3px;
             animation: typing 1.4s infinite ease-in-out;
         }
         
@@ -118,6 +173,44 @@
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-5px); }
         }
+        
+        .player-mention {
+            color: var(--italy-blue);
+            font-weight: bold;
+        }
+        
+        .match-highlight {
+            color: var(--italy-red);
+            font-weight: bold;
+        }
+        
+        .coach-mention {
+            color: var(--italy-green);
+            font-weight: bold;
+        }
+        
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .quick-reply {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--italy-blue);
+            border: 1px solid var(--italy-blue);
+            border-radius: 15px;
+            padding: 5px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-reply:hover {
+            background-color: var(--italy-blue);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -130,12 +223,19 @@
         <div class="message bot-message">
             Hi there! I'm the Italy Kids FC bot. ⚽<br><br>
             You can ask me about:<br>
-            • Team history<br>
-            • Upcoming matches<br>
-            • Player information<br>
-            • Training schedule<br>
-            • How to join<br>
-            • And more!
+            • Team history and achievements<br>
+            • Players and coaches<br>
+            • Upcoming matches and schedule<br>
+            • Training information<br>
+            • How to join our team<br>
+            • Contact details<br><br>
+            
+            <div class="quick-replies">
+                <div class="quick-reply" onclick="handleQuickReply('history')">Team History</div>
+                <div class="quick-reply" onclick="handleQuickReply('players')">Players</div>
+                <div class="quick-reply" onclick="handleQuickReply('matches')">Next Match</div>
+                <div class="quick-reply" onclick="handleQuickReply('join')">How to Join</div>
+            </div>
         </div>
     </div>
     
@@ -152,23 +252,22 @@
     
     <script>
         const knowledgeBase = {
-            "hello": "Hello! Welcome to Italy Kids FC. How can I help you today? ⚽",
-            "hi": "Hi there! What would you like to know about our team?",
-            "history": "Italy Kids FC was founded in 2018 in Fuoni Melisaba, Zanzibar. We started as street footballers and grew into a competitive team that's now the pride of our community!",
-            "achievements": "Our achievements include:<br>• Back-to-Back Ramadhan Tournament Champions (2018 & 2019)<br>• Kapa & Sharo's Cup 2021 Finalists<br>• Community Impact Award 2022",
-            "location": "We're based in Fuoni Melisaba, Zanzibar. Our training ground is at the Italy Street football pitch.",
-            "join": "To join Italy Kids FC:<br>1. Come to our training sessions (Mon/Wed/Fri 4-6pm)<br>2. Speak with Coach Ali<br>3. Complete registration forms<br>All players aged 8-16 are welcome!",
-            "age": "We accept players aged 8 to 16 years old.",
-            "training": "Training schedule:<br>• Monday: 4-6pm (Technical skills)<br>• Wednesday: 4-6pm (Tactical training)<br>• Friday: 4-6pm (Friendly matches)",
-            "coach": "Our head coach is Coach Ali. He's been with the team since 2019 and specializes in youth development.",
-            "contact": "You can contact us via:<br>• Phone: +255 XXX XXX XXX<br>• Email: info@italykidsfc.com<br>• Visit us at Italy Street, Fuoni Melisaba",
-            "matches": "Next matches:<br>1. June 15: vs Kisiki FC (Home)<br>2. June 22: vs Mpendae Stars (Away)<br>3. July 6: Tournament Quarterfinals",
-            "sponsors": "We're currently seeking sponsors to support our young talents! Contact Coach Ali for partnership opportunities.",
-            "values": "Our core values:<br>• Unity<br>• Passion<br>• Community<br>• Sportsmanship<br>• Development",
-            "founder": "The team was founded by a group of local football enthusiasts led by Jamal Abdallah, who wanted to give kids a positive outlet through sports.",
-            "uniform": "Our team colors are blue and white. Home kit: Blue shirts, white shorts. Away kit: White shirts, blue shorts.",
-            "fee": "There's a small monthly fee of TZS 20,000 to cover training equipment and facilities. Scholarships available for those in need.",
-            "default": "I'm not sure I understand. Try asking about:<br>• Team history<br>• How to join<br>• Training schedule<br>• Upcoming matches<br>• Contact information"
+            "greeting": "Hello! Welcome to Italy Kids FC from Fuoni Melisaba, Zanzibar! How can I help you today? ⚽",
+            "history": "Italy Kids FC was founded in 2018 in the heart of Fuoni Melisaba, Zanzibar, where a group of passionate young footballers transformed their street games into something extraordinary. The team takes its name from the local street known as \"Italy\" - a place where dreams were born and friendships forged through football.<br><br>Key achievements:<br>• <span class='match-highlight'>Back-to-Back Champions</span> of the prestigious Ramadhan Tournament (2018 & 2019)<br>• <span class='match-highlight'>Finalists</span> in Kapa & Sharo's Cup 2021<br>• <span class='match-highlight'>Community Impact Award</span> 2022 for youth development",
+            "achievements": "Our trophy cabinet includes:<br>• <span class='match-highlight'>7+ Years</span> of uniting our community through football<br>• <span class='match-highlight'>Undisputed Kings of Fuoni</span> - consistently ranked #1 in our district<br>• <span class='match-highlight'>Derby Dominance</span> - multiple victories against arch-rivals Kisiki FC",
+            "location": "We're based in <span class='match-highlight'>Fuoni Melisaba, Zanzibar</span>. Our home pitch is at Italy Street, where it all began!",
+            "join": "To join Italy Kids FC:<br>1. Attend our training sessions (Mon/Wed/Fri 4-6pm at Italy Street)<br>2. Speak with <span class='coach-mention'>Coach ZR</span><br>3. Complete registration forms<br><br>We welcome players aged 8-16 who share our passion for football!",
+            "age": "We accept players aged <span class='match-highlight'>8 to 16 years old</span>. Our youth development program focuses on both skills and character building.",
+            "training": "Training schedule:<br>• <span class='match-highlight'>Monday</span>: 4-6pm (Technical skills)<br>• <span class='match-highlight'>Wednesday</span>: 4-6pm (Tactical training)<br>• <span class='match-highlight'>Friday</span>: 4-6pm (Friendly matches)<br><br>All sessions are at our Italy Street pitch unless noted otherwise.",
+            "coaches": "Our coaching staff:<br>• <span class='coach-mention'>Coach Sele Tege</span> (2015-2017): Founding coach who established our structure<br>• <span class='coach-mention'>Coach Zakaria (ZR)</span> (2018-2019): Professional development era<br>• <span class='coach-mention'>Coach Mpini</span> (2010-2018): The nurturing era",
+            "contact": "Reach us via:<br>• Phone: +255 788 365 067<br>• Email: mosnake111@gmail.com<br>• Instagram: @mo_little11<br>• Visit: Italy Street, Fuoni Melisaba, Zanzibar",
+            "matches": "Upcoming matches:<br>• <span class='match-highlight'>June 15</span>: vs Kisiki FC (Home Derby)<br>• <span class='match-highlight'>June 22</span>: vs Mpendae Stars (Away)<br>• <span class='match-highlight'>July 6</span>: Ramadhan Tournament Quarterfinals<br><br>Check our website for full schedule!",
+            "players": "Our star players include:<br>• <span class='player-mention'>MO Snake</span> (#11) - Forward/Captain<br>• <span class='player-mention'>Kiduli JR</span> (#10) - Striker<br>• <span class='player-mention'>Boban</span> (#20) - Midfielder<br>• <span class='player-mention'>Taska</span> (#4) - Defender<br><br>Visit our Players page for full roster!",
+            "values": "Our core values:<br>• <span class='match-highlight'>Unity</span>: Football brings people together<br>• <span class='match-highlight'>Passion</span>: Love for the game fuels our dedication<br>• <span class='match-highlight'>Community</span>: We're more than a team - we're family",
+            "founder": "The team was founded by local football enthusiasts who transformed street games into organized matches. Key founders include <span class='player-mention'>MO Snake</span> and <span class='player-mention'>Kiduli JR</span> who helped establish our identity.",
+            "uniform": "Our kits:<br>• <span class='match-highlight'>Home</span>: Blue shirts with white trim, white shorts<br>• <span class='match-highlight'>Away</span>: Red shirts with blue trim, blue shorts<br><br>Both feature our Italy Kids logo with the founding year 2018.",
+            "fee": "Monthly fee is <span class='match-highlight'>TZS 20,000</span> to cover equipment and facilities. We offer scholarships for those in need - just speak with <span class='coach-mention'>Coach Ali</span>.",
+            "default": "I'm not sure I understand. Try asking about:<br>• Team history<br>• How to join<br>• Training schedule<br>• Upcoming matches<br>• Player information<br><br>Or click one of the quick questions above!"
         };
 
         const chatContainer = document.getElementById('chat-container');
@@ -198,35 +297,35 @@
         function getBotResponse(userMessage) {
             const lowerCaseMsg = userMessage.toLowerCase();
             
-            if (lowerCaseMsg.includes('hello') || lowerCaseMsg.includes('hi')) {
-                return knowledgeBase["hello"];
-            } else if (lowerCaseMsg.includes('history')) {
+            if (lowerCaseMsg.includes('hello') || lowerCaseMsg.includes('hi') || lowerCaseMsg.includes('hey')) {
+                return knowledgeBase["greeting"];
+            } else if (lowerCaseMsg.includes('history') || lowerCaseMsg.includes('origin') || lowerCaseMsg.includes('start')) {
                 return knowledgeBase["history"];
-            } else if (lowerCaseMsg.includes('achieve')) {
+            } else if (lowerCaseMsg.includes('achieve') || lowerCaseMsg.includes('trophy') || lowerCaseMsg.includes('win')) {
                 return knowledgeBase["achievements"];
-            } else if (lowerCaseMsg.includes('location') || lowerCaseMsg.includes('where')) {
+            } else if (lowerCaseMsg.includes('location') || lowerCaseMsg.includes('where') || lowerCaseMsg.includes('address')) {
                 return knowledgeBase["location"];
-            } else if (lowerCaseMsg.includes('join') || lowerCaseMsg.includes('register')) {
+            } else if (lowerCaseMsg.includes('join') || lowerCaseMsg.includes('register') || lowerCaseMsg.includes('sign up')) {
                 return knowledgeBase["join"];
-            } else if (lowerCaseMsg.includes('age') || lowerCaseMsg.includes('old')) {
+            } else if (lowerCaseMsg.includes('age') || lowerCaseMsg.includes('old') || lowerCaseMsg.includes('young')) {
                 return knowledgeBase["age"];
-            } else if (lowerCaseMsg.includes('train') || lowerCaseMsg.includes('practice')) {
+            } else if (lowerCaseMsg.includes('train') || lowerCaseMsg.includes('practice') || lowerCaseMsg.includes('session')) {
                 return knowledgeBase["training"];
-            } else if (lowerCaseMsg.includes('coach')) {
-                return knowledgeBase["coach"];
-            } else if (lowerCaseMsg.includes('contact')) {
+            } else if (lowerCaseMsg.includes('coach') || lowerCaseMsg.includes('manager') || lowerCaseMsg.includes('staff')) {
+                return knowledgeBase["coaches"];
+            } else if (lowerCaseMsg.includes('contact') || lowerCaseMsg.includes('email') || lowerCaseMsg.includes('phone')) {
                 return knowledgeBase["contact"];
-            } else if (lowerCaseMsg.includes('match') || lowerCaseMsg.includes('game')) {
+            } else if (lowerCaseMsg.includes('match') || lowerCaseMsg.includes('game') || lowerCaseMsg.includes('fixture')) {
                 return knowledgeBase["matches"];
-            } else if (lowerCaseMsg.includes('sponsor') || lowerCaseMsg.includes('donate')) {
-                return knowledgeBase["sponsors"];
-            } else if (lowerCaseMsg.includes('value') || lowerCaseMsg.includes('philosophy')) {
+            } else if (lowerCaseMsg.includes('player') || lowerCaseMsg.includes('squad') || lowerCaseMsg.includes('team')) {
+                return knowledgeBase["players"];
+            } else if (lowerCaseMsg.includes('value') || lowerCaseMsg.includes('philosophy') || lowerCaseMsg.includes('culture')) {
                 return knowledgeBase["values"];
-            } else if (lowerCaseMsg.includes('founder') || lowerCaseMsg.includes('start')) {
+            } else if (lowerCaseMsg.includes('founder') || lowerCaseMsg.includes('create') || lowerCaseMsg.includes('begin')) {
                 return knowledgeBase["founder"];
-            } else if (lowerCaseMsg.includes('uniform') || lowerCaseMsg.includes('kit')) {
+            } else if (lowerCaseMsg.includes('uniform') || lowerCaseMsg.includes('kit') || lowerCaseMsg.includes('jersey')) {
                 return knowledgeBase["uniform"];
-            } else if (lowerCaseMsg.includes('fee') || lowerCaseMsg.includes('cost')) {
+            } else if (lowerCaseMsg.includes('fee') || lowerCaseMsg.includes('cost') || lowerCaseMsg.includes('price')) {
                 return knowledgeBase["fee"];
             } else {
                 return knowledgeBase["default"];
@@ -246,13 +345,45 @@
                 hideTypingIndicator();
                 const botResponse = getBotResponse(message);
                 addMessage(botResponse, false);
-            }, 1000 + Math.random() * 1000); // Simulate typing delay
+                
+                // Add quick replies for certain responses
+                if (!message.includes('hello') && !message.includes('hi')) {
+                    const quickReplies = document.createElement('div');
+                    quickReplies.className = 'quick-replies';
+                    quickReplies.innerHTML = `
+                        <div class="quick-reply" onclick="handleQuickReply('players')">Players</div>
+                        <div class="quick-reply" onclick="handleQuickReply('matches')">Matches</div>
+                        <div class="quick-reply" onclick="handleQuickReply('training')">Training</div>
+                        <div class="quick-reply" onclick="handleQuickReply('contact')">Contact</div>
+                    `;
+                    chatContainer.appendChild(quickReplies);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function handleQuickReply(topic) {
+            userInput.value = topic;
+            handleUserInput();
         }
 
         sendBtn.addEventListener('click', handleUserInput);
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') handleUserInput();
         });
+
+        // Add football animation to the chat header
+        const header = document.querySelector('.chat-header');
+        const football = document.createElement('div');
+        football.innerHTML = '⚽';
+        football.style.position = 'absolute';
+        football.style.right = '20px';
+        football.style.top = '50%';
+        football.style.transform = 'translateY(-50%)';
+        football.style.fontSize = '24px';
+        football.style.animation = 'float 3s ease-in-out infinite';
+        header.style.position = 'relative';
+        header.appendChild(football);
     </script>
 </body>
 </html>
