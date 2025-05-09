@@ -159,9 +159,207 @@ nav {
   flex: 1;
 }
 
+/* Section Tabs */
+.section-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: var(--space-lg);
+}
+
+.section-tab {
+  padding: var(--space-sm) var(--space-lg);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-light);
+  border-bottom: 3px solid transparent;
+  transition: all var(--transition-normal);
+}
+
+.section-tab.active {
+  color: var(--italy-blue);
+  border-bottom-color: var(--italy-blue);
+}
+
+.section-tab:hover:not(.active) {
+  color: var(--italy-blue-dark);
+}
+
+.section-content {
+  display: none;
+}
+
+.section-content.active {
+  display: block;
+}
+
+/* Matches Section */
+.matches-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.match-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.match-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.match-card-header {
+  background: var(--italy-blue);
+  color: white;
+  padding: var(--space-sm);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.match-card-content {
+  padding: var(--space-md);
+}
+
+.match-teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.match-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.match-team-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: var(--space-xs);
+}
+
+.match-vs {
+  font-weight: bold;
+  color: var(--italy-red);
+  margin: 0 var(--space-md);
+}
+
+.match-time {
+  text-align: center;
+  color: var(--italy-green);
+  font-weight: 600;
+  margin-top: var(--space-sm);
+}
+
+.match-status {
+  display: inline-block;
+  padding: var(--space-xxs) var(--space-sm);
+  background: var(--italy-green-light);
+  color: var(--italy-green);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+}
+
+/* Highlights Section */
+.highlights-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-md);
+}
+
+.highlight-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.highlight-thumbnail {
+  position: relative;
+  height: 150px;
+  background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.highlight-play {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--italy-blue);
+}
+
+.highlight-info {
+  padding: var(--space-sm);
+}
+
+.highlight-title {
+  font-weight: 600;
+  margin-bottom: var(--space-xxs);
+}
+
+.highlight-meta {
+  font-size: var(--text-xs);
+  color: var(--text-light);
+}
+
+/* Leagues Section */
+.leagues-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+}
+
+.league-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal);
+}
+
+.league-card:hover {
+  transform: translateY(-3px);
+}
+
+.league-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: var(--space-sm);
+}
+
+.league-name {
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Featured Match Section */
+.featured-match {
+  margin-bottom: var(--space-xl);
+}
+
 .match-header {
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
 .match-header h1 {
@@ -170,7 +368,7 @@ nav {
   margin-bottom: var(--space-sm);
 }
 
-/* Match Info */
+/* Match Information */
 .match-info {
   display: flex;
   justify-content: space-between;
@@ -485,6 +683,22 @@ footer {
     width: 100%;
     justify-content: center;
   }
+  
+  .section-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: var(--space-xs);
+  }
+  
+  .section-tab {
+    padding: var(--space-sm) var(--space-md);
+  }
+  
+  .matches-container,
+  .highlights-container,
+  .leagues-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Mobile (480px and below) */
@@ -511,6 +725,10 @@ footer {
   .vs {
     font-size: var(--text-md);
   }
+  
+  .user-info {
+    justify-content: center;
+  }
 }
 
 /* Dark Mode Support */
@@ -528,12 +746,19 @@ footer {
   }
   
   .match-info,
-  .broadcaster-btn {
+  .broadcaster-btn,
+  .match-card,
+  .highlight-card,
+  .league-card {
     background-color: var(--white);
   }
   
   .stream-placeholder {
     background: #111;
+  }
+  
+  .section-tabs {
+    border-bottom-color: #444;
   }
 }
 
@@ -584,91 +809,128 @@ button:focus {
             <button class="btn btn-red" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
         </div>
 
-        <div class="match-header">
-            <h1><i class="fas fa-futbol"></i> Live Football</h1>
-            <p>Watch top matches live with Italy Kids</p>
+        <!-- Section Tabs -->
+        <div class="section-tabs">
+            <div class="section-tab active" data-tab="featured">Featured</div>
+            <div class="section-tab" data-tab="matches">Matches</div>
+            <div class="section-tab" data-tab="highlights">Highlights</div>
+            <div class="section-tab" data-tab="leagues">Leagues</div>
         </div>
 
-        <!-- Match Information -->
-        <div class="match-info">
-            <div class="teams">
-                <div class="team">
-                    <img src="assets/CITY.png" alt="Manchester City" class="team-logo" id="homeTeamLogo">
-                    <span id="homeTeamName">Manchester City</span>
+        <!-- Featured Section -->
+        <div class="section-content active" id="featured-section">
+            <div class="featured-match">
+                <div class="match-header">
+                    <h1><i class="fas fa-futbol"></i> Live Football</h1>
+                    <p>Watch top matches live with Italy Kids</p>
                 </div>
-                <div class="vs">VS</div>
-                <div class="team">
-                    <img src="assets/FCB.png" alt="Barcelona" class="team-logo" id="awayTeamLogo">
-                    <span id="awayTeamName">Barcelona</span>
+
+                <!-- Match Information -->
+                <div class="match-info">
+                    <div class="teams">
+                        <div class="team">
+                            <img src="assets/CITY.png" alt="Manchester City" class="team-logo" id="homeTeamLogo">
+                            <span id="homeTeamName">Manchester City</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <img src="assets/FCB.png" alt="Barcelona" class="team-logo" id="awayTeamLogo">
+                            <span id="awayTeamName">Barcelona</span>
+                        </div>
+                    </div>
+                    <div class="match-details">
+                        <div class="match-time" id="matchTime">LIVE 35'</div>
+                        <div class="match-competition" id="matchCompetition">UEFA Champions League</div>
+                    </div>
+                    <div class="match-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="viewerCount">0</div>
+                            <div class="stat-label">Viewers</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="matchScore">1 - 0</div>
+                            <div class="stat-label">Score</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="matchMinute">35'</div>
+                            <div class="stat-label">Minute</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stream Container -->
+                <div class="stream-container">
+                    <div id="streamPlaceholder" class="stream-placeholder">
+                        <div>
+                            <p>Select a broadcaster to start watching</p>
+                            <p><i class="fas fa-circle-notch fa-spin"></i> Loading available streams...</p>
+                        </div>
+                    </div>
+                    <video id="liveStreamPlayer" class="video-js vjs-default-skin" style="display:none;" controls preload="auto">
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a
+                            web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                        </p>
+                    </video>
+                </div>
+
+                <!-- Broadcaster Selection -->
+                <div class="broadcaster-options" id="broadcasterOptions">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+
+                <!-- Stream Controls -->
+                <div class="stream-controls">
+                    <button class="btn" id="shareBtn">
+                        <i class="fas fa-share-alt"></i> Share Stream
+                    </button>
+                    <button class="btn btn-green" id="refreshStreamBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh Stream
+                    </button>
+                    <button class="btn btn-gray" id="qualityBtn" style="display:none;">
+                        <i class="fas fa-tachometer-alt"></i> Quality
+                    </button>
+                </div>
+
+                <!-- Match Commentary -->
+                <div class="match-commentary" style="background:white; border-radius:10px; padding:1rem; margin:1rem 0; box-shadow:var(--shadow);">
+                    <h3><i class="fas fa-comment-alt"></i> Live Commentary</h3>
+                    <div id="liveCommentary" style="max-height:300px; overflow-y:auto; padding:0.5rem;">
+                        <p>Loading live commentary...</p>
+                    </div>
+                </div>
+
+                <!-- Match Statistics -->
+                <div class="match-stats-container" style="background:white; border-radius:10px; padding:1rem; margin:1rem 0; box-shadow:var(--shadow);">
+                    <h3><i class="fas fa-chart-bar"></i> Match Statistics</h3>
+                    <div id="matchStatistics" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-top:1rem;">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
                 </div>
             </div>
-            <div class="match-details">
-                <div class="match-time" id="matchTime">LIVE 35'</div>
-                <div class="match-competition" id="matchCompetition">UEFA Champions League</div>
-            </div>
-            <div class="match-stats">
-                <div class="stat">
-                    <div class="stat-value" id="viewerCount">0</div>
-                    <div class="stat-label">Viewers</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="matchScore">1 - 0</div>
-                    <div class="stat-label">Score</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="matchMinute">35'</div>
-                    <div class="stat-label">Minute</div>
-                </div>
+        </div>
+
+        <!-- Matches Section -->
+        <div class="section-content" id="matches-section">
+            <h2 class="section-title">Today's Matches</h2>
+            <div class="matches-container">
+                <!-- Match cards will be populated by JavaScript -->
             </div>
         </div>
 
-        <!-- Stream Container -->
-        <div class="stream-container">
-            <div id="streamPlaceholder" class="stream-placeholder">
-                <div>
-                    <p>Select a broadcaster to start watching</p>
-                    <p><i class="fas fa-circle-notch fa-spin"></i> Loading available streams...</p>
-                </div>
-            </div>
-            <video id="liveStreamPlayer" class="video-js vjs-default-skin" style="display:none;" controls preload="auto">
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
-            </video>
-        </div>
-
-        <!-- Broadcaster Selection -->
-        <div class="broadcaster-options" id="broadcasterOptions">
-            <!-- Options will be populated by JavaScript -->
-        </div>
-
-        <!-- Stream Controls -->
-        <div class="stream-controls">
-            <button class="btn" id="shareBtn">
-                <i class="fas fa-share-alt"></i> Share Stream
-            </button>
-            <button class="btn btn-green" id="refreshStreamBtn">
-                <i class="fas fa-sync-alt"></i> Refresh Stream
-            </button>
-            <button class="btn btn-gray" id="qualityBtn" style="display:none;">
-                <i class="fas fa-tachometer-alt"></i> Quality
-            </button>
-        </div>
-
-        <!-- Match Commentary -->
-        <div class="match-commentary" style="background:white; border-radius:10px; padding:1rem; margin:1rem 0; box-shadow:var(--shadow);">
-            <h3><i class="fas fa-comment-alt"></i> Live Commentary</h3>
-            <div id="liveCommentary" style="max-height:300px; overflow-y:auto; padding:0.5rem;">
-                <p>Loading live commentary...</p>
+        <!-- Highlights Section -->
+        <div class="section-content" id="highlights-section">
+            <h2 class="section-title">Latest Highlights</h2>
+            <div class="highlights-container">
+                <!-- Highlight cards will be populated by JavaScript -->
             </div>
         </div>
 
-        <!-- Match Statistics -->
-        <div class="match-stats-container" style="background:white; border-radius:10px; padding:1rem; margin:1rem 0; box-shadow:var(--shadow);">
-            <h3><i class="fas fa-chart-bar"></i> Match Statistics</h3>
-            <div id="matchStatistics" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-top:1rem;">
-                <!-- Stats will be populated by JavaScript -->
+        <!-- Leagues Section -->
+        <div class="section-content" id="leagues-section">
+            <h2 class="section-title">Top Leagues</h2>
+            <div class="leagues-container">
+                <!-- League cards will be populated by JavaScript -->
             </div>
         </div>
     </main>
@@ -726,6 +988,11 @@ button:focus {
         const matchCompetition = document.getElementById('matchCompetition');
         const matchScore = document.getElementById('matchScore');
         const matchMinute = document.getElementById('matchMinute');
+        const sectionTabs = document.querySelectorAll('.section-tab');
+        const sectionContents = document.querySelectorAll('.section-content');
+        const matchesContainer = document.querySelector('.matches-container');
+        const highlightsContainer = document.querySelector('.highlights-container');
+        const leaguesContainer = document.querySelector('.leagues-container');
 
         // Video Player Instance
         let player;
@@ -733,6 +1000,30 @@ button:focus {
         // Current Stream Configuration
         let currentStream = null;
         let hlsInstance = null;
+
+        // Tab switching functionality
+        sectionTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                sectionTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                sectionContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabId}-section`).classList.add('active');
+                
+                // Load data if needed
+                if (tabId === 'matches' && matchesContainer.innerHTML === '') {
+                    loadMatches();
+                } else if (tabId === 'highlights' && highlightsContainer.innerHTML === '') {
+                    loadHighlights();
+                } else if (tabId === 'leagues' && leaguesContainer.innerHTML === '') {
+                    loadLeagues();
+                }
+            });
+        });
 
         // Check auth state
         auth.onAuthStateChanged((user) => {
@@ -753,6 +1044,9 @@ button:focus {
                 initViewerCount();
                 loadMatchData();
                 initStreaming();
+                
+                // Load initial data for matches section
+                loadMatches();
             }
         });
 
@@ -925,6 +1219,234 @@ button:focus {
             }
         }
 
+        // Load matches data
+        async function loadMatches() {
+            try {
+                // Mock data for matches
+                const mockMatches = [
+                    {
+                        id: 1,
+                        competition: "Premier League",
+                        time: "19:45",
+                        status: "LIVE",
+                        homeTeam: { name: "Arsenal", logo: "assets/arsenal.png", score: 2 },
+                        awayTeam: { name: "Chelsea", logo: "assets/chelsea.png", score: 1 }
+                    },
+                    {
+                        id: 2,
+                        competition: "Serie A",
+                        time: "20:00",
+                        status: "LIVE",
+                        homeTeam: { name: "Juventus", logo: "assets/juventus.png", score: 0 },
+                        awayTeam: { name: "AC Milan", logo: "assets/milan.png", score: 0 }
+                    },
+                    {
+                        id: 3,
+                        competition: "La Liga",
+                        time: "21:00",
+                        status: "UPCOMING",
+                        homeTeam: { name: "Real Madrid", logo: "assets/madrid.png", score: null },
+                        awayTeam: { name: "Atletico Madrid", logo: "assets/atletico.png", score: null }
+                    },
+                    {
+                        id: 4,
+                        competition: "Bundesliga",
+                        time: "17:30",
+                        status: "HALFTIME",
+                        homeTeam: { name: "Bayern Munich", logo: "assets/bayern.png", score: 1 },
+                        awayTeam: { name: "Dortmund", logo: "assets/dortmund.png", score: 1 }
+                    }
+                ];
+
+                // Clear container
+                matchesContainer.innerHTML = '';
+
+                // Add match cards
+                mockMatches.forEach(match => {
+                    const matchCard = document.createElement('div');
+                    matchCard.className = 'match-card';
+                    
+                    let statusClass = '';
+                    let statusText = match.status;
+                    
+                    if (match.status === "LIVE") {
+                        statusClass = 'live';
+                        statusText = 'LIVE';
+                    } else if (match.status === "UPCOMING") {
+                        statusClass = 'upcoming';
+                    } else if (match.status === "HALFTIME") {
+                        statusClass = 'halftime';
+                    }
+                    
+                    const scoreDisplay = match.homeTeam.score !== null ? 
+                        `${match.homeTeam.score} - ${match.awayTeam.score}` : 'vs';
+                    
+                    matchCard.innerHTML = `
+                        <div class="match-card-header">${match.competition}</div>
+                        <div class="match-card-content">
+                            <div class="match-teams">
+                                <div class="match-team">
+                                    <img src="${match.homeTeam.logo}" alt="${match.homeTeam.name}" class="match-team-logo">
+                                    <span>${match.homeTeam.name}</span>
+                                </div>
+                                <div class="match-vs">${scoreDisplay}</div>
+                                <div class="match-team">
+                                    <img src="${match.awayTeam.logo}" alt="${match.awayTeam.name}" class="match-team-logo">
+                                    <span>${match.awayTeam.name}</span>
+                                </div>
+                            </div>
+                            <div class="match-time">
+                                <span class="match-status ${statusClass}">${statusText}</span>
+                                ${match.time}
+                            </div>
+                        </div>
+                    `;
+                    
+                    matchesContainer.appendChild(matchCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading matches:', error);
+            }
+        }
+
+        // Load highlights data
+        async function loadHighlights() {
+            try {
+                // Mock data for highlights
+                const mockHighlights = [
+                    {
+                        id: 1,
+                        title: "Manchester City vs Barcelona - All Goals",
+                        duration: "3:45",
+                        views: "1.2M",
+                        date: "2 days ago",
+                        thumbnail: "assets/highlight1.jpg"
+                    },
+                    {
+                        id: 2,
+                        title: "Best Saves of the Week",
+                        duration: "4:12",
+                        views: "856K",
+                        date: "1 day ago",
+                        thumbnail: "assets/highlight2.jpg"
+                    },
+                    {
+                        id: 3,
+                        title: "Premier League Matchday Highlights",
+                        duration: "8:30",
+                        views: "2.1M",
+                        date: "3 days ago",
+                        thumbnail: "assets/highlight3.jpg"
+                    },
+                    {
+                        id: 4,
+                        title: "Top 5 Goals from Serie A",
+                        duration: "5:15",
+                        views: "1.5M",
+                        date: "5 days ago",
+                        thumbnail: "assets/highlight4.jpg"
+                    }
+                ];
+
+                // Clear container
+                highlightsContainer.innerHTML = '';
+
+                // Add highlight cards
+                mockHighlights.forEach(highlight => {
+                    const highlightCard = document.createElement('div');
+                    highlightCard.className = 'highlight-card';
+                    
+                    highlightCard.innerHTML = `
+                        <div class="highlight-thumbnail">
+                            <img src="${highlight.thumbnail}" alt="${highlight.title}" style="width:100%; height:100%; object-fit:cover;">
+                            <div class="highlight-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="highlight-info">
+                            <div class="highlight-title">${highlight.title}</div>
+                            <div class="highlight-meta">
+                                <span>${highlight.views} views</span> • 
+                                <span>${highlight.duration}</span> • 
+                                <span>${highlight.date}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    highlightsContainer.appendChild(highlightCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading highlights:', error);
+            }
+        }
+
+        // Load leagues data
+        async function loadLeagues() {
+            try {
+                // Mock data for leagues
+                const mockLeagues = [
+                    {
+                        id: 1,
+                        name: "Premier League",
+                        logo: "assets/premier-league.png",
+                        country: "England"
+                    },
+                    {
+                        id: 2,
+                        name: "La Liga",
+                        logo: "assets/la-liga.png",
+                        country: "Spain"
+                    },
+                    {
+                        id: 3,
+                        name: "Serie A",
+                        logo: "assets/serie-a.png",
+                        country: "Italy"
+                    },
+                    {
+                        id: 4,
+                        name: "Bundesliga",
+                        logo: "assets/bundesliga.png",
+                        country: "Germany"
+                    },
+                    {
+                        id: 5,
+                        name: "Ligue 1",
+                        logo: "assets/ligue-1.png",
+                        country: "France"
+                    },
+                    {
+                        id: 6,
+                        name: "UEFA Champions League",
+                        logo: "assets/ucl.png",
+                        country: "Europe"
+                    }
+                ];
+
+                // Clear container
+                leaguesContainer.innerHTML = '';
+
+                // Add league cards
+                mockLeagues.forEach(league => {
+                    const leagueCard = document.createElement('div');
+                    leagueCard.className = 'league-card';
+                    
+                    leagueCard.innerHTML = `
+                        <img src="${league.logo}" alt="${league.name}" class="league-logo">
+                        <div class="league-name">${league.name}</div>
+                        <small>${league.country}</small>
+                    `;
+                    
+                    leaguesContainer.appendChild(leagueCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading leagues:', error);
+            }
+        }
+
         // Initialize streaming
         function initStreaming() {
             // Initialize video.js player
@@ -1077,9 +1599,10 @@ button:focus {
                 matchTime.textContent = "FULL TIME";
             }
         }, 30000); // Update every 30 seconds for demo purposes
+        
         function openChat() {
-        window.open('ballBot.html', 'chatWindow', 'width=500,height=600');
-      }
+            window.open('ballBot.html', 'chatWindow', 'width=500,height=600');
+        }
     </script>
 </body>
 </html>
